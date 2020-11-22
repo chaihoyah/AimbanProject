@@ -1,0 +1,38 @@
+{
+    "name": "appname",
+    "version": "1.0.0",
+
+    "server": {
+        "host": "http://ec2-3-135-210-99.us-east-2.compute.amazonaws.com",
+        "port": "3000",
+        "user_login": "/user/login",
+        "user_logout": "/user/logout",
+        "user_signup": "/user/signup",
+        "user_config": "/user/config/",
+        "stock_get": "/stock/get/",
+        "stock_set": "/stock/set/",
+        "stock_update": "/stock/update/",
+        "register_pro": "/register/pro/",
+        "register_fab": "/register/fab/",
+        "register_sub": "/register/sub/",
+        "admin_login": "/admin/login/",
+        "admin_timeline": "/admin/timeline/",
+        "admin_update": "/admin/update/",
+        "admin_update_list": "/admin/update/list",
+        "admin_signup": "/admin/signup/",
+        "admin_signup_list": "/admin/signup/list",
+        "admin_register_pro": "/admin/register/pro",
+        "admin_register_pro_list": "/admin/register/pro/list",
+        "admin_register_fab": "/admin/register/fab",
+        "admin_register_fab_list": "/admin/register/fab/list",
+        "admin_register_sub": "/admin/register/sub",
+        "admin_register_sub_list": "/admin/register/sub/list"
+    },
+    
+    "user": {
+        "auto": false,
+        "name": "신채호",
+        "group": "",
+        "team": "개발팀"
+    }
+}
