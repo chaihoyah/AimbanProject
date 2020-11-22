@@ -10,22 +10,39 @@ import React, {Fragment, Component} from 'react';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, headerBackButton} from '@react-navigation/stack';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 //Login scenes
 import LoginScreen from './src/screens/LoginScreen';
 import MakeIDScreen from './src/screens/LoginScreen/MakeIDScreen';
+import PickTeamLoginScreen from './src/screens/LoginScreen/MakeIDScreen/PickTeamLogin';
+import PickTeamLoginDetailScreen from './src/screens/LoginScreen/MakeIDScreen/PickTeamLogin/PickTeamLoginDetail';
+
 // Main scene
 import MainScreen from './src/screens/MainScreen';
 //Stock change scenes
 import CheckStockScreen from './src/screens/MainScreen/CheckStockScreen';
 import StockChangeScreen from './src/screens/MainScreen/StockChangeScreen';
 import PutProductScreen from './src/screens/MainScreen/PutProductScreen';
+import PutProductPickColorScreen from './src/screens/MainScreen/PutProductScreen/PutProductPickColorScreen';
 import SettingsScreen from './src/screens/MainScreen/SettingsScreen';
 import PickTeamScreen from './src/screens/MainScreen/StockChangeScreen/PickTeamScreen';
+import PickTeamDetailScreen from './src/screens/MainScreen/StockChangeScreen/PickTeamScreen/PickTeamDetailScreen';
 import PickProductScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen';
 import PickCategoryScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickCategoryScreen';
+import PickColorScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickColorScreen';
+import PickFabTypeScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickColorScreen/PickFabTypeScreen';
+import PickProductFinalScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickProductFinalScreen';
 import PickKindsScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickCategoryScreen/PickKindsScreen';
 import PickCategoryFinalScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickCategoryScreen/PickKindsScreen/PickCategoryFinalScreen';
+
+//Admin scenes
+import AdminScreen from './src/screens/AdminScreen';
+import InoutHistoryScreen from './src/screens/AdminScreen/InoutHistoryScreen';
+import ApprovalRequestScreen from './src/screens/AdminScreen/ApprovalRequestScreen';
+
+//config.Json
+import config_data from "./config.json";
 
 import {
   SafeAreaView,
@@ -50,51 +67,16 @@ const RootStack = createStackNavigator();
 const Stack_login = createStackNavigator();
 const Stack_main = createStackNavigator();
 const Stack_admin = createStackNavigator();
-
-/**class IU extends Component{
-    render () {
-        let xxxImg = '';
-        if (this.props.type === 'one'){
-            //xxxImg = require('./assets/xxx.jpg');
-        }
-        else if (this.props.type === 'two'){
-            //xxxImg = require('./assets/xxx.jpg');
-        }
-        return (
-            <View>
-                //<Image source = {require('./assets/xxx.jpg')} style = {{width: 100, height: 100}}/>
-            </View>
-
-        )
-    //이미지 다 넣어놓고 props.type으로 불러오기
-    }
-}**/
-
-function Login_Screen({navigation}){
-    return(
-        <View style = {{flex:1}}>
-            <Text> Home Screen 입니다.</Text>
-            <Button title = '회원가입' onPress={() => navigation.navigate('MakeID')} />
-        </View>
-    )
-}
-
-function MakeID_Screen({navigation}){
-    return(
-        <View style = {{flex:1}}>
-            <Text> Home Screen 입니다.</Text>
-            <Button title = '뒤로가기' onPress={() => navigation.goBack()} />
-        </View>
-    )
-}
+const Stack_Inadmin = createMaterialTopTabNavigator();
 
 function LoginStack({navigation}){
     return(
-    <Stack_login.Navigator initialRouteName = "Login">
-        <Stack_login.Screen name = "Login" component = {LoginScreen} options={{title:'AIMBAN'}}/>
-        <Stack_login.Screen name = "MakeID" component = {MakeIDScreen} options={{title:'회원가입'}} />
+    <Stack_login.Navigator initialRouteName = "Login" screenOptions={{headerShown:false}}>
+        <Stack_login.Screen name = "Login" component = {LoginScreen}/>
+        <Stack_login.Screen name = "MakeID" component = {MakeIDScreen}/>
+        <Stack_login.Screen name = "PickTeamLogin" component = {PickTeamLoginScreen}/>
+        <Stack_login.Screen name = "PickTeamLoginDetail" component = {PickTeamLoginDetailScreen}/>
     </Stack_login.Navigator>
-
     );
 }
 
@@ -108,6 +90,8 @@ function getHeaderTitle_main(route) {
             //입, 출, 조정 나누기
             return '입고 정보';
         case 'PickTeam':
+            return '부서 선택';
+        case 'PickTeamDetail':
             return '팀 선택';
         case 'PickProduct':
             return '제품 선택';
@@ -156,21 +140,52 @@ function MainStack({navigation, route}){
     }, [navigation, route]);
 //StockChangeScreen initalparam에 user 팀 넣기
     return(
-        <Stack_main.Navigator>
+        <Stack_main.Navigator initialRouteName = "Main" screenOptions={{headerShown: false}}>
             <Stack_main.Screen name = "Main" component = {MainScreen}/>
 
             <Stack_main.Screen name = "CheckStock" component = {CheckStockScreen}/>
             <Stack_main.Screen name = "PutProduct" component = {PutProductScreen}/>
+            <Stack_main.Screen name = "PutProductPickColor" component = {PutProductPickColorScreen}/>
             <Stack_main.Screen name = "Settings" component = {SettingsScreen}/>
-            <Stack_main.Screen name = "StockChange" component = {StockChangeScreen} initialParams={{teamName:"재단팀", productName:"", productCode:0}}/>
+            <Stack_main.Screen name = "StockChange" component = {StockChangeScreen}/>
             <Stack_main.Screen name = "PickTeam" component = {PickTeamScreen}/>
+            <Stack_main.Screen name = "PickTeamDetail" component = {PickTeamDetailScreen}/>
             <Stack_main.Screen name = "PickProduct" component = {PickProductScreen}/>
             <Stack_main.Screen name = "PickCategory" component = {PickCategoryScreen}/>
+            <Stack_main.Screen name = "PickColor" component = {PickColorScreen}/>
+            <Stack_main.Screen name = "PickFabType" component = {PickFabTypeScreen}/>
+            <Stack_main.Screen name = "PickProductFinal" component = {PickProductFinalScreen}/>
             <Stack_main.Screen name = "PickKinds" component = {PickKindsScreen}/>
             <Stack_main.Screen name = "PickCategoryFinal" component = {PickCategoryFinalScreen}/>
 
         </Stack_main.Navigator>
 
+    );
+}
+
+function AdminStack({navigation, route}){
+    React.useLayoutEffect(() => {
+
+
+    }, [navigation, route]);
+    return(
+    <Stack_admin.Navigator initialRouteName = "Admin" screenOptions={{headerShown:false}}>
+        <Stack_admin.Screen name = "Admin" component = {AdminScreen}/>
+    </Stack_admin.Navigator>
+
+    );
+}
+
+function InAdminStack({navigation, route}){
+    React.useLayoutEffect(() => {
+
+
+    }, [navigation, route]);
+    return(
+        <Stack_Inadmin.Navigator tabBarPosition ='bottom' initialRouteName = "InoutHistory" screenOptions={{headerShown:false}}>
+            <Stack_Inadmin.Screen name = "InoutHistory" component = {InoutHistoryScreen}/>
+            <Stack_Inadmin.Screen name = "ApprovalRequest" component = {ApprovalRequestScreen}/>
+        </Stack_Inadmin.Navigator>
     );
 }
 
@@ -196,20 +211,13 @@ class App extends Component{
             return '<SplashScreen />';
           }
           return (
-/*            <NavigationContainer>
-                <SafeAreaView style = {styles.container}>
-                    <View style = {styles.main_view}>
-
-                    <Text> {this.state.address} </Text>
-                    <Button title = {'주소 출력'} onPress = {this.writeAddress} />
-                    </View>
-                </SafeAreaView>
-            </NavigationContainer>*/
 
             <NavigationContainer>
-                <RootStack.Navigator initialRouteName="Login">
-                    <RootStack.Screen name = "LoginStack" component = {LoginStack} options={{title:'AIMBAN'}}/>
+                <RootStack.Navigator initialRouteName="LoginStack"  screenOptions={{headerShown: false}}>
+                    <RootStack.Screen name = "LoginStack" component = {LoginStack} />
                     <RootStack.Screen name = "MainStack" component = {MainStack}/>
+                    <RootStack.Screen name = "AdminStack" component = {AdminStack}/>
+                    <RootStack.Screen name = "InAdminStack" component = {InAdminStack}/>
                 </RootStack.Navigator>
             </NavigationContainer>
           );

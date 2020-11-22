@@ -5,55 +5,104 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    Image,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {RFPercentage, RFValue} from "react-native-responsive-fontsize"
 
 export default function PickCategoryScreen({route, navigation}){
+    const [isSewingteam, setisSewingteam] = React.useState(false);
+    const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
 
-    function go_pickKinds(){
-        navigation.navigate('PickKinds', {whereFrom:route.params.whereFrom});
+    React.useEffect(() =>{
+        if(route.params.userteam == "개발팀"){setisSewingteam(true)};
+    }, []);
+
+    function go_back(){
+        navigation.goBack();
     };
-    //1 원단, 2 부자재, 10 헤드레스트, 11 자동차용품, 12 가죽용품, 13 세차용품
+
+    //1 원단, 2 부자재, 10 헤드레스트, 11 자동차용품, 12 가죽용품, 13 세차용품,
+    //자동차용푸 - 20콘솔쿠션, 21 허리쿠션+방석, 22 핸들커버, 23 시트백커버, 24 방향제, 25 스마트폰 충전기&거치대, 26 etc
     //whereFrom 0: 입출조정 1: 재고확인 2: 제품등록
     function go_pickCategoryFinalorCheckStock(category){
-        console.log(route.params.whereFrom);
-        if(route.params.whereFrom === 0) navigation.navigate('PickCategoryFinal', {category:category});
-        else if(route.params.whereFrom === 1) navigation.navigate('CheckStock', {category:category});
-        else if(route.params.whereFrom === 2) navigation.navigate('PutProduct', {category:category});
+        if(route.params.whereFrom === 2){
+            if(category === 0) navigation.navigate('PickKinds', {category:category, whereFrom:route.params.whereFrom, configdata:userConfigdata});
+            else if(category === 1) navigation.navigate('PutProduct', {category:category});
+            else if(category === 2) navigation.navigate('PutProduct', {category:category});
+        }
+        else{
+            if(category === 0) navigation.navigate('PickKinds', {category:category, whereFrom:route.params.whereFrom, configdata:userConfigdata});
+            else if(category === 1) navigation.navigate('PickColor', {category:category, whereFrom:route.params.whereFrom, configdata:userConfigdata});
+            else if(category === 2) navigation.navigate('PickProductFinal', {category:category, whereFrom:route.params.whereFrom, configdata:userConfigdata});
+        }
+    };
+
+    function get_bujajaeImage(){
+        //isSewingTeam일때 바꾸기
+        if(isSewingteam) return require('../../../../../images/pickcategory/bujajae.jpg');
+        else return require('../../../../../images/pickcategory/bujajae_two.png');
     };
 
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.textArea}>
-                <Text style={{fontSize:20,color:'black'}}>종류를 선택하세요</Text>
+            <View style={styles.headerArea}>
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{width:'10%',height:'40%', marginRight:'2%'}}
+                    onPress={(x)=>{go_back()}}>
+                    <Image
+                        style={{width:'100%',height:'100%',resizeMode:'contain'}}
+                        source={require('../../../../../images/checkstock/back_button.jpg')}
+                    />
+                </TouchableOpacity>
+                <Text style={{height:'70%',width:'60%', color:'black',fontSize:RFPercentage('4.5')}}>종류 선택</Text>
+                <View style={{width:'15%', height:'100%', flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
+                    <Image
+                        style={{width:'50%',height:'50%',resizeMode:'contain',marginRight:'1%'}}
+                        source={require('../../../../../images/checkstock/userinfo_icon.png')}
+                    />
+                    <View style={{flexDirection:'column', alignItems:'flex-end'}}>
+                        <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
+                        <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                    </View>
+                </View>
             </View>
             <View style={styles.buttonArea}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={(x) => {go_pickKinds()}}>
-                    <Text style={styles.buttonTitle}>제품</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
+                    onPress={(x) => {go_pickCategoryFinalorCheckStock(0)}}>
+                    <Image
+                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                        source={require('../../../../../images/pickcategory/jaepum.png')}
+                        />
                 </TouchableOpacity>
             </View>
-            <View style={styles.buttonArea}>
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.button}
-                    onPress={(x) => {go_pickCategoryFinalorCheckStock(1)}}>
-                    <Text style={styles.buttonTitle}>원단</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
-                </TouchableOpacity>
-            </View>
+            {isSewingteam &&
+                <View style={styles.buttonArea}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.button}
+                        onPress={(x) => {go_pickCategoryFinalorCheckStock(1)}}>
+                        <Image
+                            style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                            source={require('../../../../../images/pickcategory/wondan.jpg')}
+                            />
+                    </TouchableOpacity>
+                </View>
+            }
             <View style={styles.buttonArea}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
                     onPress={(x) => {go_pickCategoryFinalorCheckStock(2)}}>
-                    <Text style={styles.buttonTitle}>부자재</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
+                    <Image
+                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                        source={get_bujajaeImage()}
+                        />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -64,28 +113,30 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        paddingTop: hp('3%'),
-        paddingBottom: hp('3%'),
-        paddingLeft: wp('10%'),
-        paddingRight: wp('10%'),
+        paddingTop: '2%',
+        paddingBottom: '5%',
+        paddingLeft: '10%',
+        paddingRight: '10%',
+    },
+    headerArea:{
+        width: '100%',
+        height: '9%',
+        alignItems: 'center',
+        flexDirection:'row',
+        marginBottom: '8%',
     },
     buttonArea: {
-        width: '100%',
-        height: hp('10%'),
+        width: '80%',
+        height: '13%',
         alignItems: 'center',
-        marginTop: hp('2%'),
-        marginBottom: hp('2%'),
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginBottom: '5%',
     },
     button: {
-        flexDirection: 'row',
-        backgroundColor: "#46c3ad",
         width: "100%",
         height: "100%",
-        justifyContent: 'space-between',
         alignItems: 'center',
-        borderRadius: 20,
-        paddingLeft: "5%",
-        paddingRight: "5%",
     },
     buttonTitle: {
         color: 'white',

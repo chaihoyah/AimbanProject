@@ -5,61 +5,67 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    Image,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 
 export default function PickTeamScreen ({route, navigation}){
 
-    function pickteam(name){
-        navigation.navigate('StockChange',{teamName: name});
+    function go_pickteamdetail(groupname){
+        navigation.navigate('PickTeamDetail', {groupVal: groupname});
+    };
+
+    function go_back(){
+        navigation.goBack();
     };
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.headerArea}>
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{width:'10%',height:'40%', marginRight:'2%'}}
+                    onPress={(x)=>{go_back()}}>
+                    <Image
+                        style={{width:'100%',height:'100%',resizeMode:'contain'}}
+                        source={require('../../../../images/checkstock/back_button.jpg')}
+                    />
+                </TouchableOpacity>
+                <Text style={{height:'70%',width:'60%', color:'black',fontSize:RFPercentage('4.5')}}>부서 선택</Text>
+            </View>
             <View style={styles.buttonArea}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={(x) => {pickteam("재단팀")}}>
-                    <Text style={styles.buttonTitle}>재단팀</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
+                    onPress={(name) => {go_pickteamdetail(0)}}>
+                    <Image
+                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                        source={require('../../../../images/makeid/group0.png')}
+                        />
                 </TouchableOpacity>
             </View>
             <View style={styles.buttonArea}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={(x) => {pickteam("미싱팀")}}>
-                    <Text style={styles.buttonTitle}>미싱팀</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
+                    onPress={(name) => {go_pickteamdetail(1)}}>
+                    <Image
+                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                        source={require('../../../../images/makeid/group1.png')}
+                        />
                 </TouchableOpacity>
             </View>
             <View style={styles.buttonArea}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={(x) => {pickteam("미싱팀 - 차산리")}}>
-                    <Text style={styles.buttonTitle}>미싱팀 - 차산리</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.buttonArea}>
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.button}
-                    onPress={(x) => {pickteam("헤드팀")}}>
-                    <Text style={styles.buttonTitle}>헤드팀</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.buttonArea}>
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.button}
-                    onPress={(x) => {pickteam("용품팀")}}>
-                    <Text style={styles.buttonTitle}>용품팀</Text>
-                    <Text style={[styles.buttonTitle]}> 버튼 이미지 </Text>
+                    onPress={(name) => {go_pickteamdetail(2)}}>
+                    <Image
+                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                        source={require('../../../../images/makeid/group2.png')}
+                        />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -76,23 +82,26 @@ const styles = StyleSheet.create({
         paddingLeft: wp('10%'),
         paddingRight: wp('10%'),
     },
-    buttonArea: {
+    headerArea:{
         width: '100%',
-        height: hp('10%'),
+        height: '9%',
         alignItems: 'center',
-        marginTop: hp('2%'),
-        marginBottom: hp('2%'),
+        flexDirection:'row',
+        marginBottom: '5%',
+    },
+    buttonArea: {
+        width: '80%',
+        height: '13%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginBottom: '2%',
     },
     button: {
-        flexDirection: 'row',
-        backgroundColor: "#46c3ad",
         width: "100%",
         height: "100%",
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 40,
-        paddingLeft: "5%",
-        paddingRight: "5%",
     },
     buttonTitle: {
         color: 'white',
