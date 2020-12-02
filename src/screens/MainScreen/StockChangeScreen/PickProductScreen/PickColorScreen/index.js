@@ -51,8 +51,7 @@ export default function PickColorScreen({route, navigation}){
         else
         {
             for(var i in userConfigdata.pro){
-                if(pro[i].name === prodName)
-                name_arr.push({key:userConfigdata.pro[i].color, code:userConfigdata.pro[i].code});
+                if(userConfigdata.pro[i].name === prodName) name_arr.push({key:userConfigdata.pro[i].color, code:userConfigdata.pro[i].code});
             };
         }
 

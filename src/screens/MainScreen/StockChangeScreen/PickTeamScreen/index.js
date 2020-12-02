@@ -14,7 +14,8 @@ import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 export default function PickTeamScreen ({route, navigation}){
 
     function go_pickteamdetail(groupname){
-        navigation.navigate('PickTeamDetail', {groupVal: groupname});
+        if(route.params.whereFrom === 0) navigation.navigate('PickTeamDetail', {groupVal: groupname, whereFrom:route.params.whereFrom});
+        else if(route.params.whereFrom === 1) navigation.navigate('PickTeamDetail', {groupVal: groupname, whereFrom:route.params.whereFrom, userdata:route.params.userdata});
     };
 
     function go_back(){

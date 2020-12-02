@@ -12,6 +12,8 @@
         "stock_get": "/stock/get/",
         "stock_set": "/stock/set/",
         "stock_update": "/stock/update/",
+        "stock_details_team": "/stock/details/team",
+        "stock_details_who": "/stock/details/who",
         "register_pro": "/register/pro/",
         "register_fab": "/register/fab/",
         "register_sub": "/register/sub/",

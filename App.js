@@ -22,10 +22,15 @@ import PickTeamLoginDetailScreen from './src/screens/LoginScreen/MakeIDScreen/Pi
 import MainScreen from './src/screens/MainScreen';
 //Stock change scenes
 import CheckStockScreen from './src/screens/MainScreen/CheckStockScreen';
+import CheckStockPickOneScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen';
+import CheckInoutFinalScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen/CheckInoutFinalScreen';
+import CheckStockPickTwoScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen/CheckStockPickTwoScreen';
+import CheckStockFinalScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen/CheckStockPickTwoScreen/CheckStockFinalScreen';
 import StockChangeScreen from './src/screens/MainScreen/StockChangeScreen';
 import PutProductScreen from './src/screens/MainScreen/PutProductScreen';
 import PutProductPickColorScreen from './src/screens/MainScreen/PutProductScreen/PutProductPickColorScreen';
 import SettingsScreen from './src/screens/MainScreen/SettingsScreen';
+import SettingsMyinfoScreen from './src/screens/MainScreen/SettingsScreen/SettingsMyinfoScreen';
 import PickTeamScreen from './src/screens/MainScreen/StockChangeScreen/PickTeamScreen';
 import PickTeamDetailScreen from './src/screens/MainScreen/StockChangeScreen/PickTeamScreen/PickTeamDetailScreen';
 import PickProductScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen';
@@ -111,6 +116,9 @@ function getHeaderTitle_main(route) {
 }
 
 function MainStack({navigation, route}){
+    const [userName, setuserName] = React.useState(route.params.username);
+    const [userTeam, setuserTeam] = React.useState(route.params.userteam);
+    const [userID, setuserID] = React.useState(route.params.userid);
     React.useLayoutEffect(() => {
         navigation.setOptions({
         headerTitle: getHeaderTitle_main(route),
@@ -141,12 +149,17 @@ function MainStack({navigation, route}){
 //StockChangeScreen initalparam에 user 팀 넣기
     return(
         <Stack_main.Navigator initialRouteName = "Main" screenOptions={{headerShown: false}}>
-            <Stack_main.Screen name = "Main" component = {MainScreen}/>
+            <Stack_main.Screen name = "Main" component = {MainScreen} initialParams = {{username:userName, userteam:userTeam, userid: userID}}/>
 
             <Stack_main.Screen name = "CheckStock" component = {CheckStockScreen}/>
+            <Stack_main.Screen name = "CheckStockPickOne" component = {CheckStockPickOneScreen}/>
+            <Stack_main.Screen name = "CheckInoutFinal" component = {CheckInoutFinalScreen}/>
+            <Stack_main.Screen name = "CheckStockPickTwo" component = {CheckStockPickTwoScreen}/>
+            <Stack_main.Screen name = "CheckStockFinal" component = {CheckStockFinalScreen}/>
             <Stack_main.Screen name = "PutProduct" component = {PutProductScreen}/>
             <Stack_main.Screen name = "PutProductPickColor" component = {PutProductPickColorScreen}/>
             <Stack_main.Screen name = "Settings" component = {SettingsScreen}/>
+            <Stack_main.Screen name = "SettingsMyinfo" component = {SettingsMyinfoScreen}/>
             <Stack_main.Screen name = "StockChange" component = {StockChangeScreen}/>
             <Stack_main.Screen name = "PickTeam" component = {PickTeamScreen}/>
             <Stack_main.Screen name = "PickTeamDetail" component = {PickTeamDetailScreen}/>
@@ -164,10 +177,7 @@ function MainStack({navigation, route}){
 }
 
 function AdminStack({navigation, route}){
-    React.useLayoutEffect(() => {
 
-
-    }, [navigation, route]);
     return(
     <Stack_admin.Navigator initialRouteName = "Admin" screenOptions={{headerShown:false}}>
         <Stack_admin.Screen name = "Admin" component = {AdminScreen}/>
@@ -177,14 +187,16 @@ function AdminStack({navigation, route}){
 }
 
 function InAdminStack({navigation, route}){
-    React.useLayoutEffect(() => {
-
-
-    }, [navigation, route]);
+    const [inout_obj, setInout_obj] = React.useState(route.params.inoutjson);
+    const [signupJson, setsignupJson] = React.useState(route.params.signupjson);
+    const [proJson, setproJson] = React.useState(route.params.projson);
+    const [fabJson, setfabJson] = React.useState(route.params.fabjson);
+    const [subJson, setsubJson] = React.useState(route.params.subjson);
+    const [updateJson, setupdateJson] = React.useState(route.params.updatejson);
     return(
         <Stack_Inadmin.Navigator tabBarPosition ='bottom' initialRouteName = "InoutHistory" screenOptions={{headerShown:false}}>
-            <Stack_Inadmin.Screen name = "InoutHistory" component = {InoutHistoryScreen}/>
-            <Stack_Inadmin.Screen name = "ApprovalRequest" component = {ApprovalRequestScreen}/>
+            <Stack_Inadmin.Screen name = "InoutHistory" component = {InoutHistoryScreen} initialParams={{inoutjson: inout_obj}}/>
+            <Stack_Inadmin.Screen name = "ApprovalRequest" component = {ApprovalRequestScreen} initialParams={{signupjson:signupJson, projson:proJson, fabjson:fabJson, subjson:subJson, updatejson:updateJson}}/>
         </Stack_Inadmin.Navigator>
     );
 }

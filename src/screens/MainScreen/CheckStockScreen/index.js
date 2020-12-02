@@ -24,17 +24,23 @@ export default function CheckStockScreen ({route, navigation}){
     const [productCat, setproductCat] = React.useState('');
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
 
+    React.useEffect(() =>{
+        if(route.params?.category){
+          setproductCat(check_category());
+            console.log(productCat);
+        }
+        console.log(userConfigdata);
+    });
     function go_back(){
         navigation.goBack();
     };
 
-    function go_StockChange(){
-        navigation.navigate('Main');
-        console.log(productName);
+    function go_pickproduct(){
+        navigation.navigate('PickProduct', {whereFrom: 1, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata})
     };
 
-    function go_pickCategory(){
-        navigation.navigate('PickCategory', {whereFrom: 1});
+    function go_pickTeam(){
+        navigation.navigate('PickTeam', {whereFrom: 1, userdata: userConfigdata.user});
     };
 
     function find_product(){
@@ -43,12 +49,6 @@ export default function CheckStockScreen ({route, navigation}){
         setproductCode(123);
         setproductName('name');
     };
-    React.useEffect(() =>{
-        if(route.params?.category){
-          setproductCat(check_category());
-            console.log(productCat);
-        }
-    });
 
     function check_category(){
         setproductCat(route.params?.category);
@@ -80,53 +80,37 @@ export default function CheckStockScreen ({route, navigation}){
                         source={require('../../../images/checkstock/back_button.jpg')}
                     />
                 </TouchableOpacity>
-                <Text style={{height:'70%',width:'60%', color:'black',fontSize:RFPercentage('4.5')}}>재고 확인</Text>
+                <Text style={{height:'50%',width:'60%', color:'black',fontSize:RFPercentage('2.8')}}>재고 및 입출고 확인</Text>
                 <View style={{width:'15%', height:'100%', flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
                     <Image
                         style={{width:'50%',height:'50%',resizeMode:'contain',marginRight:'1%'}}
                         source={require('../../../images/checkstock/userinfo_icon.png')}
                     />
                     <View style={{flexDirection:'column', alignItems:'flex-end'}}>
-                        <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>홍길동</Text>
-                        <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>재단팀</Text>
+                        <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
+                        <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                     </View>
                 </View>
-            </View>
-            <View style={styles.buttontitle_area}>
-                <Text style={{height:'100%',width:'50%', color:'black',fontSize:RFPercentage('3.3')}}>제품명 검색</Text>
-            </View>
-            <View style={styles.productSearchArea}>
-                    <Image
-                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                        source={require('../../../images/checkstock/findprod_background.png')}
-                        />
-                    <TextInput
-                        style={styles.textForm}
-                        placeholder={"제품명 검색"}
-                        onChangeText = {find_product}/>
-            </View>
-            <View style={styles.buttontitle_area}>
-                <Text style={{height:'100%',width:'50%', color:'black',fontSize:RFPercentage('3.3')}}>카테고리 검색</Text>
             </View>
             <View style={styles.productSearchArea}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={(x)=>{go_pickCategory()}}>
+                    onPress={(x)=>{go_pickproduct()}}>
                     <Image
                         style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                        source={require('../../../images/checkstock/category_button.png')}
+                        source={require('../../../images/checkstock/checkstock_button.png')}
                         />
                 </TouchableOpacity>
             </View>
-            <View style={styles.buttonArea}>
+            <View style={styles.productSearchArea}>
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    style={styles.button_small}
-                    onPress={(x)=>{go_StockChange()}}>
+                    style={styles.button}
+                    onPress={(x)=>{go_pickTeam()}}>
                     <Image
                         style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                        source={require('../../../images/checkstock/check_button.png')}
+                        source={require('../../../images/checkstock/checkinout_button.png')}
                         />
                 </TouchableOpacity>
             </View>

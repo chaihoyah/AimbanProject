@@ -24,8 +24,7 @@ export default function SettingsScreen ({route, navigation}){
     };
 
     function go_myInfo(){
-        navigation.navigate('Main');
-        console.log(productName);
+        navigation.navigate('SettingsMyinfo', {username:route.params.username, userteam:route.params.userteam, userid:route.params.userid});
     };
 
     function go_Admin(){
@@ -51,8 +50,8 @@ export default function SettingsScreen ({route, navigation}){
                         source={require('../../../images/checkstock/userinfo_icon.png')}
                     />
                     <View style={{flexDirection:'column', alignItems:'flex-end'}}>
-                        <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>홍길동</Text>
-                        <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>재단팀</Text>
+                        <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
+                        <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                     </View>
                 </View>
             </View>
@@ -77,12 +76,6 @@ export default function SettingsScreen ({route, navigation}){
                         source={require('../../../images/setting/adminpage_button.png')}
                         />
                 </TouchableOpacity>
-            </View>
-            <View style={styles.logoArea}>
-                    <Image
-                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                        source={require('../../../images/setting/logolower_image.png')}
-                        />
             </View>
         </SafeAreaView>
     );
@@ -109,11 +102,6 @@ const styles = StyleSheet.create({
         height: '18%',
         alignItems: 'center',
         marginBottom: '3%',
-    },
-    logoArea: {
-        width: '60%',
-        height: '20%',
-        marginTop:'10%',
     },
     button_small:{
         width: '45%',

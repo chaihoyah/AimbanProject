@@ -16,7 +16,7 @@ export default function PickCategoryScreen({route, navigation}){
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
 
     React.useEffect(() =>{
-        if(route.params.userteam == "개발팀"){setisSewingteam(true)};
+        if(route.params.userteam === "개발팀"){setisSewingteam(true)};
     }, []);
 
     function go_back(){

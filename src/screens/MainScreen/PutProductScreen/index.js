@@ -112,7 +112,7 @@ export default function PutProductScreen ({route, navigation}){
         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.register_fab),
         {method:'POST',
         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-        body: JSON.stringify({name:productName})})
+        body: JSON.stringify({name:productName, color:productName})})
         .then((response)=> {return response.json();})
         .then((json)=> {if(json.Code == "0") navigate_main(); else fetchError();})
         .catch((error)=>{console.error(error);});
@@ -238,7 +238,7 @@ export default function PutProductScreen ({route, navigation}){
                         onPress={(x)=>{go_pickColor()}}>
                         <Image
                             style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                            source={require('../../../images/putproduct/pickcategory_button.png')}
+                            source={require('../../../images/putproduct/pickcolor_button.png')}
                             />
                         <Text style={styles.buttonTitle}>{prodCol}</Text>
                     </TouchableOpacity>

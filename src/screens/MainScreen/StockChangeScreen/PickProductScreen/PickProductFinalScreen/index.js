@@ -16,6 +16,7 @@ export default function PickProductFinalScreen({route, navigation}){
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
     const [prodArray, setprodArray] = React.useState([]);
     const [prodCat, setprodCat] = React.useState(route.params.category);
+    const [objArray, setobjArray] = React.useState([]);
 
     React.useEffect(() => {
         setprodArray(get_prodArray());
@@ -29,84 +30,129 @@ export default function PickProductFinalScreen({route, navigation}){
         //Get Product Code
         if(prodCat === 2){
             if (route.params.whereFrom === 0 ) navigation.navigate('StockChange', {category:prodCat, prodname:name, prodcode:code});
-            else if (route.params.whereFrom === 1) navigation.navigate('CheckStock', {category:prodCat, prodname:name, prodcode:code});
+            else if (route.params.whereFrom === 1) navigation.navigate('CheckStockPickOne', {configdata:objArray});
         }
         else{
-            navigation.navigate('PickColor', {category:category, prodname:name, whereFrom:route.params.whereFrom, configdata:userConfigdata});
+            if (route.params.whereFrom === 0) navigation.navigate('PickColor', {category:prodCat, prodname:name, whereFrom:route.params.whereFrom, configdata:userConfigdata});
+            else if (route.params.whereFrom === 1) navigation.navigate('CheckStockPickOne', {configdata:objArray});
         }
     };
 
     function get_prodArray(){
         var name_arr = [];
+        var name_tmp = [];
+        var obj_arr = [];
         if(prodCat === 2)
         {
             for(var i in userConfigdata.sub){
                 name_arr.push({key:userConfigdata.sub[i].name, code:userConfigdata.sub[i].code});
+                obj_arr.push(userConfigdata.sub[i]);
             }
+            return Array.from(new Set(name_arr));
         }
         else if(prodCat === 10){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "헤드레스트") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "헤드레스트") {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 11){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "자동차용품") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "자동차용품")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 12){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "가죽용품") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "가죽용품")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 13){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "세차용품") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "세차용품")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 13){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "세차용품") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "세차용품")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 20){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "콘솔쿠션") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "콘솔쿠션")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 21){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "허리쿠션+방석") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "허리쿠션+방석")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 22){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "핸들커버") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "핸들커버")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 23){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "시트백커버") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "시트백커버")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 24){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "방향제") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "방향제")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 25){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "스마트폰 충전기&거치대") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "스마트폰 충전기&거치대")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
         else if(prodCat === 26){
             for(var i in userConfigdata.pro){
-                if(userConfigdata.pro[i].category === "etc") name_arr.push({key:userConfigdata.pro[i].name, code:-2});
+                if(userConfigdata.pro[i].category === "etc")  {
+                    name_tmp.push(userConfigdata.pro[i].name);
+                    obj_arr.push(userConfigdata.pro[i]);
+                }
             }
         }
-
-        console.log(Array.from(new Set(name_arr)));
-        return Array.from(new Set(name_arr));
+        var tmp = Array.from(new Set(name_tmp));
+        console.log(tmp);
+        for(var i in tmp){
+            name_arr.push({key:tmp[i], code: -2})
+        }
+        if(route.params.whereFrom === 1) setobjArray(obj_arr);
+        return name_arr;
     };
 
 

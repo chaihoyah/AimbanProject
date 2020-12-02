@@ -15,7 +15,6 @@ import {
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import Autocomplete from 'react-native-autocomplete-input';
 
 export default function PickProductScreen ({route, navigation}){
     const [productName, setproductName] = React.useState("");
@@ -36,33 +35,72 @@ export default function PickProductScreen ({route, navigation}){
     };
 
     function find_product(){
-        //상품 코드에 따라
-        prod = valid_name_check();
-        console.log(prod);
-        if(prod)  {
-            if(prod.category === 1) navigation.navigate('PickFabType', {category: 1, prodname:prod.name, prodcode:prod.code, whereFrom:route.params.whereFrom,prodcolor: prod.name});
-            else if(prod.category === 2) {
-                if (route.params.whereFrom === 0 ) navigation.navigate('StockChange', {category:2, prodname:prod.name, prodcode:prod.code});
-                else if (route.params.whereFrom === 1) navigation.navigate('CheckStock', {category:2, prodname:prod.name, prodcode:prod.code});
+        if(route.params.whereFrom === 0)
+        {
+            var prod = valid_name_check();
+            if(prod){
+                if(prod.category === 1) navigation.navigate('PickFabType', {category: 1, prodname:prod.name, prodcode:prod.code, whereFrom:route.params.whereFrom,prodcolor: prod.name});
+                else if(prod.category === 2) {
+                    navigation.navigate('StockChange', {category:2, prodname:prod.name, prodcode:prod.code});
+                }
+                else {
+                console.log(prod);
+                navigation.navigate('StockChange', {category:prod.category, prodname:prod.name, prodcode:prod.code, prodcolor:prod.color});
+                //navigation.navigate('PickColor', {prodname:prod.name, category:30, configdata:userConfigdata,whereFrom:route.params.whereFrom});
+                }
             }
-            else navigation.navigate('PickColor', {prodname:prod.name, category:30, configdata:userConfigdata,whereFrom:route.params.whereFrom});
+            else {
+            Alert.alert(
+              "검색 실패",
+              "제품명을 확인해주세요!"
+            );
+            }
         }
-        else {
-        Alert.alert(
-          "검색 실패",
-          "제품명을 확인해주세요!"
-        );
+        else{
+            var prod = get_validdata();
+            if(prod.length > 0){
+                navigation.navigate('CheckStockPickOne', {configdata:prod});
+            }
+            else{
+                Alert.alert(
+                  "검색 실패",
+                  "제품명을 확인해주세요!"
+                );
+            }
         }
     };
 
     function valid_name_check(){
+        ///얘 확인
         for(var i in nameArray){
-            if(nameArray[i].name === productName) {
-
+            if(nameArray[i].key === productName) {
             return nameArray[i];
             }
         }
-    }
+    };
+
+    function get_validdata()
+    {
+        var res = [];
+        for(var i in userConfigdata.fab){
+            if(userConfigdata.fab[i].name === productName){
+                res.push(userConfigdata.fab[i]);
+            }
+        };
+        if(res.length>0) return res;
+        for(var i in userConfigdata.pro){
+            if(userConfigdata.pro[i].name === productName){
+                res.push(userConfigdata.pro[i]);
+            }
+        };
+        if(res.length>0) return res;
+        for(var i in userConfigdata.sub){
+            if(userConfigdata.sub[i].name === productName){
+                res.push(userConfigdata.sub[i]);
+            }
+        };
+        return res;
+    };
 
     function go_back(){
         navigation.goBack();
@@ -70,17 +108,37 @@ export default function PickProductScreen ({route, navigation}){
 
     function get_prodnameArray(){
         var name_arr = [];
-        for(var i in userConfigdata.fab){
-            name_arr.push({key:'원단 - '.concat(userConfigdata.fab[i].name), code:userConfigdata.fab[i].code, name:userConfigdata.fab[i].name, category:1});
-        };
-        for(var i in userConfigdata.pro){
-            name_arr.push({key:userConfigdata.pro[i].name.concat(' - ',userConfigdata.pro[i].color), name:userConfigdata.pro[i].name, category:30});
-        };
-        for(var i in userConfigdata.sub){
-            name_arr.push({key:'부자재 - '.concat(userConfigdata.sub[i].name),code:userConfigdata.sub[i].code, name:userConfigdata.sub[i].name, category:2});
-        };
-        console.log(Array.from(new Set(name_arr)));
-        return Array.from(new Set(name_arr));
+        var name_tmp = [];
+        if(route.params.whereFrom === 0)
+        {
+            for(var i in userConfigdata.fab){
+                name_arr.push({key:'원단 - '.concat(userConfigdata.fab[i].name), code:userConfigdata.fab[i].code, name:userConfigdata.fab[i].name, category:1});
+            };
+            for(var i in userConfigdata.pro){
+                name_arr.push({key:userConfigdata.pro[i].name.concat(' - ',userConfigdata.pro[i].color), color:userConfigdata.pro[i].color,name:userConfigdata.pro[i].name, code:userConfigdata.pro[i].code, category:30});
+            };
+            for(var i in userConfigdata.sub){
+                name_arr.push({key:'부자재 - '.concat(userConfigdata.sub[i].name),code:userConfigdata.sub[i].code, name:userConfigdata.sub[i].name, category:2});
+            };
+            console.log(Array.from(new Set(name_arr)));
+            return Array.from(new Set(name_arr));
+        }
+        else{
+            for(var i in userConfigdata.fab){
+                name_tmp.push(userConfigdata.fab[i].name);
+            };
+            for(var i in userConfigdata.pro){
+                name_tmp.push(userConfigdata.pro[i].name);
+            };
+            for(var i in userConfigdata.sub){
+                name_tmp.push(userConfigdata.sub[i].name);
+            };
+            var tmp = Array.from(new Set(name_tmp));
+            for(var i in tmp){
+                name_arr.push({key:tmp[i]})
+            }
+            return name_arr;
+        }
     };
 
     const getProd = (query) =>{
@@ -143,7 +201,7 @@ export default function PickProductScreen ({route, navigation}){
                                     return(
                                     <TouchableOpacity
                                         style = {{width:'100%', height:hp('4%'), borderBottomColor:'black', borderBottomWidth:1,justifyContent:'center'}}
-                                        onPress={() => {setproductName(item.name); setproductObj(item); setisShowingResults(false)}}>
+                                        onPress={() => {setproductName(item.key); setproductObj(item); setisShowingResults(false)}}>
                                     <Text style={{fontSize:RFPercentage(2)}}>
                                     {item.key}
                                     </Text>

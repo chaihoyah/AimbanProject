@@ -8,27 +8,22 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
+    Alert,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
+import moment from 'moment';
 import AsyncStorage from "@react-native-community/async-storage";
 import config_data from "../../../config.json";
 
 export default function MainScreen ({route, navigation}){
-    const [userName, setuserName] = React.useState("");
-    const [userTeam, setuserTeam] = React.useState("");
-    const [userID, setuserID] = React.useState("");
+    const [userName, setuserName] = React.useState(route.params.username);
+    const [userTeam, setuserTeam] = React.useState(route.params.userteam);
+    const [userID, setuserID] = React.useState(route.params.userid);
     const [userConfigdata, setuserConfigdata] = React.useState({});
 
     React.useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', ()=>{
-            fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.user_config),
-            {method:'POST',
-            headers: {Accept: 'application/json', 'Content-Type': 'application/json'}})
-            .then((response)=> {return response.json();})
-            .then((json)=> {if(json.Code == "0") setuserConfigdata(json.Data); else fetchError();})
-            .catch((error)=>{console.error(error);});
-        });
+        /**
         AsyncStorage.getItem('user_name', (err, result)=>{
             setuserName(result);
         });
@@ -37,6 +32,18 @@ export default function MainScreen ({route, navigation}){
         });
         AsyncStorage.getItem('user_id', (err, result)=>{
             setuserID(result);
+        });**/
+        console.log(userID);
+       var date = moment().utcOffset('+09:00').format('YYYY-MM-DD');
+        const unsubscribe = navigation.addListener('focus', ()=>{
+            fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.user_config),
+            {method:'POST',
+            headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+            body: JSON.stringify({id:userID, date:date})})
+            .then((response)=> {return response.json();})
+            .then((json)=> {if(json.Code == "0") setuserConfigdata(json.Data); else fetchError();})
+            .catch((error)=>{console.error(error);});
+            console.log(userConfigdata);
         });
     },[navigation]);
 
@@ -46,6 +53,7 @@ export default function MainScreen ({route, navigation}){
           "네트워크 연결상태를 확인해주세요!"
         );
     };
+
     function go_checkStock(){
         navigation.navigate('CheckStock',{username:userName, userteam:userTeam, configdata:userConfigdata});
     };

@@ -39,16 +39,18 @@ export default function LoginScreen ({navigation}){
         .then((response)=> {return response.json();})
         .then((json)=> {if(json.Code == "0") loggedin(json); else loginError();})
         .catch((error)=>{console.error(error);});
+
     };
 
     function loggedin(json){
     //AutoLogin 넣기, name, team 서버 요청 받아서 넣기
+        //
         AsyncStorage.setItem('user_loginauto', JSON.stringify(false), ()=>{console.log("false set")});
         AsyncStorage.setItem('user_id', text_id, ()=>{});
         AsyncStorage.setItem('user_pwd', text_pwd, ()=>{});
-        AsyncStorage.setItem('user_name', "신채호", ()=>{});
-        AsyncStorage.setItem('user_team', "개발팀", ()=>{});
-        navigation.replace('MainStack');
+        AsyncStorage.setItem('user_name', json.Data.name, ()=>{});
+        AsyncStorage.setItem('user_team', json.Data.team, ()=>{});
+        navigation.replace('MainStack', {username:json.Data.name, userteam:json.Data.team, userid:text_id});
     };
 
     function loginError(){

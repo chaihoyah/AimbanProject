@@ -76,9 +76,9 @@ export default function MakeIDScreen ({route, navigation}){
         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.user_signup),
         {method:'POST',
         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-        body: JSON.stringify({id:userID, team:get_teamtext(), name:userName})})
+        body: JSON.stringify({id:userID, passwd: userPassword,team:get_teamtext(), name:userName})})
         .then((response)=> {return response.json();})
-        .then((json)=> {if(json.Code == "0") navigation.goBack(); else signupError();})
+        .then((json)=> {if(json.Code == "0") navigation.goBack(); else console.log(json);})
         .catch((error)=>{console.error(error); signupError();});
     };
 

@@ -13,47 +13,161 @@ import {
 import CheckBox from '@react-native-community/checkbox';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useFocusEffect } from '@react-navigation/native';
-import {RFPercentage, RFValue} from "react-native-responsive-fontsize"
+import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
+import {DataTable} from 'react-native-paper';
+import config_data from "../../../../config.json";
 
 export default function ApprovalRequestScreen ({route, navigation}){
     const [buttonText, setbuttonText] = React.useState('선택');
-    const [check, setCheck] = React.useState(false);
+    const [check, setCheck] = React.useState();
     const [isSelectChecked, setSelectChecked] = React.useState(false);
+    const [usersignupList, setusersignupList] = React.useState();
+    const [userobj, setUserobj] = React.useState();
+    const [signupJson, setsignupJson] = React.useState(route.params.signupjson);
+    const [proJson, setproJson] = React.useState(route.params.projson);
+    const [fabJson, setfabJson] = React.useState(route.params.fabjson);
+    const [subJson, setsubJson] = React.useState(route.params.subjson);
+    const [updateJson, setupdateJson] = React.useState(route.params.updatejson);
+    const [allJson, setallJson] = React.useState();
+    React.useEffect(() => {
+        get_allarr();
+    },[navigation]);
 
-    function go_StockChange(){
-        navigation.navigate('StockChange');
-        console.log(productName);
-    };
-
-    function go_pickCategory(){
-        navigation.navigate('PickCategory', {whereFrom: 1});
+    function fetchError(json){
+        Alert.alert(
+          "서버 연결 실패",
+          "네트워크 연결상태를 확인해주세요!"
+        );
+        console.log(json);
     };
 
     function select(){
-
+        let err_check = false;
         if(!isSelectChecked) setbuttonText('승인');
-        else setbuttonText('선택');
+        else {
+            for(var i in check){
+                if(check[i]){
+                    if(allJson[i].cat ===0)
+                    {
+                        fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_signup),
+                        {method:'POST',
+                        headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                        body: JSON.stringify({id:allJson[i].key, isAccept:true})})
+                        .then((response)=> {return response.json();})
+                        .then((json)=> {if(json.Code == "0") console.log(json.Data); else err_check=true;})
+                        .catch((error)=>{console.error(error);});
+                    }
+                    else if(allJson[i].cat ===1)
+                    {
+                        fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_register_pro),
+                        {method:'POST',
+                        headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                        body: JSON.stringify({name:allJson[i].key, color:allJson[i].color, isAccept:true})})
+                        .then((response)=> {return response.json();})
+                        .then((json)=> {if(json.Code == "0") console.log(json.Data); else err_check=true;})
+                        .catch((error)=>{console.error(error);});
+                    }
+                    else if(allJson[i].cat ===2)
+                    {
+                        fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_register_fab),
+                        {method:'POST',
+                        headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                        body: JSON.stringify({name:allJson[i].key, color:allJson[i].key, isAccept:true})})
+                        .then((response)=> {return response.json();})
+                        .then((json)=> {if(json.Code == "0") console.log(json.Data); else err_check=true;})
+                        .catch((error)=>{console.error(error);});
+                    }
+                    else if(allJson[i].cat ===3)
+                    {
+                        fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_register_sub),
+                        {method:'POST',
+                        headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                        body: JSON.stringify({name:allJson[i].key, isAccept:true})})
+                        .then((response)=> {return response.json();})
+                        .then((json)=> {if(json.Code == "0") console.log(json.Data); else err_check=true;})
+                        .catch((error)=>{console.error(error);});
+                    }
+                    else
+                    {
+                        fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_update),
+                        {method:'POST',
+                        headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                        body: JSON.stringify({idx:allJson[i].key, isAccept: true})})
+                        .then((response)=> {return response.json();})
+                        .then((json)=> {if(json.Code == "0") console.log(json.Data); else err_check=true;})
+                        .catch((error)=>{console.error(error);});
+                    }
+                }
+            }
+        if(err_check){
+            Alert.alert(
+              "서버 연결 실패",
+              "네트워크 연결상태를 확인해주세요!"
+            );
+        }
+        setbuttonText('선택');
+        }
         setSelectChecked(!isSelectChecked);
     };
 
-    function check_category(){
-        setproductCat(route.params?.category);
-        switch(route.params?.category){
-            case 1:
-                return '원단';
-            case 2:
-                return '부자재';
-            case 10:
-                return '헤드레스트';
-            case 11:
-                return '자동차용품';
-            case 12:
-                return '가죽용품';
-            case 13:
-                return '세차용품';
-        };
+    function get_group(team){
+        if(team === "미싱 1팀" || team === "미싱 2팀" || team == "재단팀") return "생산 1부";
+        else if(team === "미싱팀" || team === "생산지원팀") return "생산 2부";
+        else if(team === "헤드레스트팀" || team === "용품팀") return "생산 3부";
     };
 
+    function get_userList(json){
+        let user_arr = [];
+        let check_arr = [];
+        let k=0;
+        for(var i in json){
+            user_arr.push({key:json[i].id, name:json[i].name, team:json[i].team, category: "회원가입",setcheck: false});
+        }
+        setUserobj(user_arr);
+        for(var i in user_arr){
+            check_arr.push(false);
+        }
+        setCheck(check_arr);
+    };
+
+    function get_allarr(){
+        let all_arr = [];
+        let check_arr = [];
+        for(var i in signupJson){
+            all_arr.push({key:signupJson[i].id, name:signupJson[i].name, team:signupJson[i].team, category: "회원가입", cat:0});
+            check_arr.push(false);
+        }
+        for(var i in proJson){
+            all_arr.push({key:proJson[i].name, color:proJson[i].color, prodcat:proJson[i].category, category: "제품 등록", cat:1});
+            check_arr.push(false);
+        }
+        for(var i in fabJson){
+            all_arr.push({key:fabJson[i].name,category: "원단 등록", cat:2});
+            check_arr.push(false);
+        }
+        for(var i in subJson){
+            all_arr.push({key:subJson[i].name, category: "부자재 등록", cat:3});
+            check_arr.push(false);
+        }
+        for(var i in updateJson){
+            all_arr.push({key:updateJson[i].idx, name:updateJson[i].code, before: updateJson[i].before, after: updateJson[i].after, id:updateJson[i].id, team:updateJson[i].team, category: "재고 조정", cat:4});
+            check_arr.push(false);
+        }
+        setallJson(all_arr);
+        setCheck(check_arr);
+    }
+
+    function set_check(index){
+        let check_arr = [];
+        for(var i in check){
+            if(i == index) {
+            check_arr.push(!check[i]);
+            }
+            else check_arr.push(check[i]);
+        }
+        setCheck(check_arr);
+    };
+//
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.titleArea}>
@@ -66,29 +180,84 @@ export default function ApprovalRequestScreen ({route, navigation}){
                 <Text style={{fontSize:RFPercentage(3), alignSelf:'center', marginBottom:'3%'}}>승인 목록</Text>
                 <View style = {styles.scroll}>
                     <FlatList
-                        data = {[
-                            {key: 'S 타입'},
-                            {key: 'S 타입 프리미엄'},
-                            {key: 'etc1'},
-                            {key: 'etc2'},
-                            {key: 'etc3'},
-                            {key: 'etc4'},
-                            {key: 'etc5'},
-                        ]}
-                        renderItem={({item}) =>
-                        <View style = {{flexDirection:'row', justifyContent:'center'}}>
-                            <TouchableOpacity
-                                activeOpacity={0.8}
-                                style={styles.scrollview_button}
-                                onPress={(x)=>{go_pickCategory()}}>
-                                <Text style={[styles.buttonTitle, {fontSize:18,backgroundColor:'black'}]}>{item.key}</Text>
-                                <Text style={[styles.buttonTitle, {fontSize:18}]}>{item.key}</Text>
-                            </TouchableOpacity>
+                        data = {allJson}
+                        renderItem={({item, index}) =>
+                        <View style = {{flexDirection:'row', justifyContent:'center', marginBottom:'3%'}}>
+                            <View style = {{width:'70%'}}>
+                                {item.cat===0 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
+                                    <DataTable.Header>
+                                        <DataTable.Title >요청 종류</DataTable.Title>
+                                        <DataTable.Title>이름</DataTable.Title>
+                                        <DataTable.Title>ID</DataTable.Title>
+                                        <DataTable.Title>부서</DataTable.Title>
+                                        <DataTable.Title>팀</DataTable.Title>
+                                    </DataTable.Header>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>{item.category}</DataTable.Cell>
+                                        <DataTable.Cell>{item.name}</DataTable.Cell>
+                                        <DataTable.Cell>{item.key}</DataTable.Cell>
+                                        <DataTable.Cell>{get_group(item.team)}</DataTable.Cell>
+                                        <DataTable.Cell>{item.team}</DataTable.Cell>
+                                    </DataTable.Row>
+                                </DataTable>}
+                                {item.cat===1 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
+                                    <DataTable.Header>
+                                        <DataTable.Title >요청 종류</DataTable.Title>
+                                        <DataTable.Title>이름</DataTable.Title>
+                                        <DataTable.Title>색상</DataTable.Title>
+                                        <DataTable.Title>카테고리</DataTable.Title>
+                                    </DataTable.Header>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>{item.category}</DataTable.Cell>
+                                        <DataTable.Cell>{item.key}</DataTable.Cell>
+                                        <DataTable.Cell>{item.color}</DataTable.Cell>
+                                        <DataTable.Cell>{item.prodcat}</DataTable.Cell>
+                                    </DataTable.Row>
+                                </DataTable>}
+                                {item.cat===2 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
+                                    <DataTable.Header>
+                                        <DataTable.Title >요청 종류</DataTable.Title>
+                                        <DataTable.Title>색상</DataTable.Title>
+                                    </DataTable.Header>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>{item.category}</DataTable.Cell>
+                                        <DataTable.Cell>{item.key}</DataTable.Cell>
+                                    </DataTable.Row>
+                                </DataTable>}
+                                {item.cat===3 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
+                                    <DataTable.Header>
+                                        <DataTable.Title >요청 종류</DataTable.Title>
+                                        <DataTable.Title>이름</DataTable.Title>
+                                    </DataTable.Header>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>{item.category}</DataTable.Cell>
+                                        <DataTable.Cell>{item.key}</DataTable.Cell>
+                                    </DataTable.Row>
+                                </DataTable>}
+                                {item.cat===4 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
+                                    <DataTable.Header>
+                                        <DataTable.Title >요청 종류</DataTable.Title>
+                                        <DataTable.Title>제품 이름</DataTable.Title>
+                                        <DataTable.Title>변경 전</DataTable.Title>
+                                        <DataTable.Title>변경 후</DataTable.Title>
+                                        <DataTable.Title>팀</DataTable.Title>
+                                        <DataTable.Title>요청 ID</DataTable.Title>
+                                    </DataTable.Header>
+                                    <DataTable.Row>
+                                        <DataTable.Cell>{item.category}</DataTable.Cell>
+                                        <DataTable.Cell>{"S타입"}</DataTable.Cell>
+                                        <DataTable.Cell>{String(item.before)}</DataTable.Cell>
+                                        <DataTable.Cell>{String(item.after)}</DataTable.Cell>
+                                        <DataTable.Cell>{item.team}</DataTable.Cell>
+                                        <DataTable.Cell>{item.id}</DataTable.Cell>
+                                    </DataTable.Row>
+                                </DataTable>}
+                            </View>
                             <View style = {{alignSelf:'center'}}>
                                 {isSelectChecked && <CheckBox
                                    disabled={false}
-                                    value={check}
-                                    onValueChange={value => setCheck(value)}
+                                    value={check[index]}
+                                    onValueChange={() => {set_check(index)}}
                                 />}
                             </View>
                         </View>}
@@ -104,7 +273,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.button}
-                            onPress={(x)=>{go_pickCategory()}}>
+                            onPress={(x)=>{get_allarr()}}>
                             <Text style={[styles.buttonTitle, {fontSize:RFPercentage(2.6)}]}>모두 승인</Text>
                         </TouchableOpacity>
                 </View>

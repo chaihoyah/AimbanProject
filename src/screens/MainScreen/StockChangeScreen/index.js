@@ -22,21 +22,31 @@ export default function StockChangeScreen ({route, navigation}){
     const [amount, setAmount] = React.useState();
     const [productName, setProductName] = React.useState(route.params?.prodname);
     const [productCode, setProductCode] = React.useState(route.params?.prodcode);
-    const [productType, setProductType] = React.useState("");
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
     const [prodCat, setProdCat] = React.useState(route.params?.category);
+    const [prodBeforeAmt, setProdBeforeAmt] = React.useState();
 
 
     //route parameters: teamName(Char), productName(Char), productCode(unsigned int), doWhat(0:in, 1:out, 2:change)
     //amount -> 수량 나타냄
     React.useEffect(() =>{
+        console.log(userConfigdata);
         setProductName(route.params?.prodname);
         setProductCode(route.params?.prodcode);
         setProdCat(route.params?.category);
         setTeam(get_teamtext());
-        if(prodCat===1) setProductType(route.params?.prodtype);
-        else if(prodCat !== 2) setProductType(route.params?.prodcolor);
-        console.log(userConfigdata);
+        if(route.params.doWhat === 2){
+            if(route.params?.prodcode){
+                var date = moment().utcOffset('+09:00').format('YYYY-MM-DD');
+                fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_get),
+                {method:'POST',
+                headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+                body: JSON.stringify({code:route.params?.prodcode, date:date ,team: route.params.userteam})})
+                .then((response)=> {return response.json();})
+                .then((json)=> {if(json.Code == "0") setProdBeforeAmt(json.Data.stock); else fetchError(json);})
+                .catch((error)=>{console.error(error);});
+            }
+        }
     }, [route.params?.teamVal,route.params?.prodname]);
 
     function go_back(){
@@ -44,7 +54,7 @@ export default function StockChangeScreen ({route, navigation}){
     };
 
     function go_pickteam(){
-        navigation.navigate('PickTeam');
+        navigation.navigate('PickTeam', {whereFrom:0});
     };
 
     function go_pickproduct(){
@@ -73,24 +83,38 @@ export default function StockChangeScreen ({route, navigation}){
             );
         }
         else{
-            if(prodCat !== 2){
+            if(prodCat === 1){
                 Alert.alert(
                   "정보 확인",
-                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", route.params.userteam, "\n", "제품: ", productName.concat('-', productType), "\n", "수량: ",amount),
+                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", route.params.userteam, "\n", "제품: ", productName.concat('-', get_fabtypetext()), "\n", "수량: ",amount),
                   [
                     {
                       text: "Cancel",
                       style: "cancel"
                     },
-                    { text: "OK", onPress: () => {finish_makeid()} }
+                    { text: "OK", onPress: () => {finish_stockchange()} }
                   ],
                   { cancelable: false }
                 );
             }
-            else {
+            else if(prodCat === 2){
                 Alert.alert(
                   "정보 확인",
                   "사용자 이름: ".concat(route.params.username, "\n", "팀: ", route.params.userteam, "\n", "제품: ", productName, "\n", "수량: ",amount),
+                  [
+                    {
+                      text: "Cancel",
+                      style: "cancel"
+                    },
+                    { text: "OK", onPress: () => {finish_stockchange()} }
+                  ],
+                  { cancelable: false }
+                );
+            }
+            else{
+                Alert.alert(
+                  "정보 확인",
+                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", route.params.userteam, "\n", "제품: ", productName.concat('-', route.params?.prodcolor), "\n", "수량: ",amount),
                   [
                     {
                       text: "Cancel",
@@ -105,16 +129,16 @@ export default function StockChangeScreen ({route, navigation}){
     };
 
     function finish_stockchange(){
-        /**
+        let final_amount = parseInt(amount);
         if (route.params.doWhat === 2 ){
-            //입고
+            //조정
             var date = moment().utcOffset('+09:00').format('YYYY-MM-DD');
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_update),
             {method:'POST',
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-            body: JSON.stringify({code:productCode, date:date, after:final_amount, id:route.params.userid})})
+            body: JSON.stringify({code:productCode, date:date, before:prodBeforeAmt, after:final_amount, id:route.params.userid, team:route.params.userteam})})
             .then((response)=> {return response.json();})
-            .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError();})
+            .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError(json);})
             .catch((error)=>{console.error(error);});
         }
         else if (route.params.doWhat === 1){
@@ -126,7 +150,7 @@ export default function StockChangeScreen ({route, navigation}){
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
             body: JSON.stringify({time:date, code:productCode, team: route.params.userteam, amount: final_amount})})
             .then((response)=> {return response.json();})
-            .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError();})
+            .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError(json);})
             .catch((error)=>{console.error(error);});
         }
         else{
@@ -135,20 +159,21 @@ export default function StockChangeScreen ({route, navigation}){
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_set),
             {method:'POST',
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-            body: JSON.stringify({time:date, code:productCode, team: route.params.userteam, amount: final_amount})})
+            body: JSON.stringify({time:date, code:productCode, who: route.params.username, team: route.params.userteam, amount: final_amount})})
             .then((response)=> {return response.json();})
-            .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError();})
+            .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError(json);})
             .catch((error)=>{console.error(error);});
-        }**/
-        //navigation.navigate('Main');
+        }
+        navigation.navigate('Main');
         console.log("finished");
     }
 
-    function fetchError(){
+    function fetchError(json){
         Alert.alert(
           "서버 연결 실패",
           "네트워크 연결상태를 확인해주세요!"
         );
+        console.log(json);
     };
 
     function get_headertext(){
@@ -215,6 +240,12 @@ export default function StockChangeScreen ({route, navigation}){
         }
         else return null;
     };
+
+    function get_fabtypetext(){
+        if(route.params?.prodtype === 3) return "10T";
+        else if(route.params?.prodtype === 2) return "3T";
+        else if(route.params?.prodtype === 1) return "생지";
+    }
 
     function get_prodname(){
         if(prodCat){
