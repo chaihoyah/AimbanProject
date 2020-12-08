@@ -25,22 +25,22 @@ export default function CheckStockScreen ({route, navigation}){
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
 
     React.useEffect(() =>{
+        console.log(userConfigdata);
         if(route.params?.category){
           setproductCat(check_category());
             console.log(productCat);
         }
-        console.log(userConfigdata);
     });
     function go_back(){
         navigation.goBack();
     };
 
     function go_pickproduct(){
-        navigation.navigate('PickProduct', {whereFrom: 1, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata})
+        navigation.navigate('PickProduct', {whereFrom: 1, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata, whereAt:0})
     };
 
     function go_pickTeam(){
-        navigation.navigate('PickTeam', {whereFrom: 1, userdata: userConfigdata.user});
+        navigation.navigate('PickProduct', {whereFrom: 3, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata, whereAt:6});
     };
 
     function find_product(){

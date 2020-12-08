@@ -59,6 +59,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
                     }
                     else if(allJson[i].cat ===1)
                     {
+                        console.log("in cat");
                         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_register_pro),
                         {method:'POST',
                         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
@@ -72,7 +73,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
                         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_register_fab),
                         {method:'POST',
                         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-                        body: JSON.stringify({name:allJson[i].key, color:allJson[i].key, isAccept:true})})
+                        body: JSON.stringify({name:allJson[i].key, color:allJson[i].code, isAccept:true})})
                         .then((response)=> {return response.json();})
                         .then((json)=> {if(json.Code == "0") console.log(json.Data); else err_check=true;})
                         .catch((error)=>{console.error(error);});
@@ -142,7 +143,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
             check_arr.push(false);
         }
         for(var i in fabJson){
-            all_arr.push({key:fabJson[i].name,category: "원단 등록", cat:2});
+            all_arr.push({key:fabJson[i].name, code:fabJson[i].color, category: "원단 등록", cat:2});
             check_arr.push(false);
         }
         for(var i in subJson){
@@ -218,10 +219,12 @@ export default function ApprovalRequestScreen ({route, navigation}){
                                     <DataTable.Header>
                                         <DataTable.Title >요청 종류</DataTable.Title>
                                         <DataTable.Title>색상</DataTable.Title>
+                                        <DataTable.Title>컬러코드</DataTable.Title>
                                     </DataTable.Header>
                                     <DataTable.Row>
                                         <DataTable.Cell>{item.category}</DataTable.Cell>
                                         <DataTable.Cell>{item.key}</DataTable.Cell>
+                                        <DataTable.Cell>{String(item.code)}</DataTable.Cell>
                                     </DataTable.Row>
                                 </DataTable>}
                                 {item.cat===3 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>

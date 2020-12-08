@@ -9,6 +9,7 @@ import {
     Image,
     FlatList,
     Alert,
+    BackHandler,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
@@ -31,19 +32,39 @@ export default function CheckStockFinalScreen({route, navigation}){
        setprodName(userConfigdata[0].name);
 
        setteamName(team_txt);
-       var date = moment().subtract(1,"days").utcOffset('+09:00').format('YYYY-MM-DD');
-       for(var i in userConfigdata){
+       const backAction = () => {
+            navigation.goBack();
+           return true;
+       };
 
-           fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_get),
-           {method:'POST',
-           headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-           body: JSON.stringify({code:userConfigdata[i].code, date:date, team:"개발팀"})})
-           .then((response)=> {return response.json();})
-           .then((json)=> {if(json.Code == "0") setstockArray(stockArray.concat(json.Data.stock)); else fetchError(json);})
-           .catch((error)=>{console.error(error);});
-       }
+       const backHandler = BackHandler.addEventListener(
+           "hardwareBackPress",
+           backAction
+       );
+
+       var date = moment().subtract(1,"days").utcOffset('+09:00').format('YYYY-MM-DD');
+       fetch_data(0,date, []);
        get_prodArray(team_txt);
+       return () => backHandler.remove();
     },[]);
+
+    function fetch_data(num, date,json_arr){
+        if(userConfigdata.length>0){
+            fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_get),
+            {method:'POST',
+            headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+            body: JSON.stringify({code:userConfigdata[num].code, date:date, team:"개발팀"})})
+            .then((response)=> {return response.json();})
+            .then((json)=> {if(json.Code == "0") {
+                if(num == userConfigdata.length-1) setstockArray(json_arr.concat(json.Data.stock));
+                else fetch_data(num+1, date, json_arr.concat(json.Data.stock));
+                } else fetchError(json);})
+            .catch((error)=>{console.error(error);});
+        }
+        else{
+        console.log("no data");
+        }
+    };
 
     function putStock(json){
         res.push(json.stock);
@@ -135,7 +156,6 @@ export default function CheckStockFinalScreen({route, navigation}){
                         data = {prodArray}
                         renderItem={({item,index}) =>
                     <View style={styles.buttonArea}>
-                    <Provider>
                         <DataTable style={{backgroundColor:'white',borderRadius: 20}}>
                             <DataTable.Header>
                                 <DataTable.Title >제품 이름</DataTable.Title>
@@ -148,7 +168,6 @@ export default function CheckStockFinalScreen({route, navigation}){
                                 <DataTable.Cell>{String(stockArray[index])}</DataTable.Cell>
                             </DataTable.Row>
                         </DataTable>
-                    </Provider>
                     </View>
                    }/>
                 </View>
@@ -168,7 +187,7 @@ const styles = StyleSheet.create({
     },
     buttonArea: {
         width: '70%',
-        height: hp('10%'),
+        height: hp('15%'),
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
@@ -179,6 +198,7 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: 'silver',
         borderRadius: 20,
+        paddingTop: '5%',
     },
     button: {
         width: "100%",

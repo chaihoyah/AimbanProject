@@ -20,6 +20,7 @@ import config_data from "../../../../config.json";
 export default function PutProductScreen ({route, navigation}){
     const [productColor, setproductColor] = React.useState('');
     const [productName, setproductName] = React.useState();
+    const [colorName, setcolorName] = React.useState();
     const [prodCat, setProdCat] = React.useState(route.params?.category);
     const [prodCol, setProdCol] = React.useState(route.params?.prodcolor);
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
@@ -44,18 +45,26 @@ export default function PutProductScreen ({route, navigation}){
 
         }
         else if (prodCat === 1){
-                Alert.alert(
-                  "등록 정보 확인",
-                  "제품명: ".concat(productName, "\n", "카테고리: 원단"),
-                  [
-                    {
-                      text: "Cancel",
-                      style: "cancel"
-                    },
-                    { text: "OK", onPress: () => {finish_fab()} }
-                  ],
-                  { cancelable: false }
-                );
+                if(!colorName){
+                    Alert.alert(
+                      "컬러코드 입력 오류",
+                      "컬러코드를 입력해주세요!"
+                    );
+                }
+                else{
+                    Alert.alert(
+                      "등록 정보 확인",
+                      "제품명: ".concat(productName, "\n", "카테고리: 원단", "\n", "컬러코드:", colorName),
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel"
+                        },
+                        { text: "OK", onPress: () => {finish_fab()} }
+                      ],
+                      { cancelable: false }
+                    );
+                }
         }
         else if (prodCat === 2){
                 Alert.alert(
@@ -112,7 +121,7 @@ export default function PutProductScreen ({route, navigation}){
         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.register_fab),
         {method:'POST',
         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-        body: JSON.stringify({name:productName, color:productName})})
+        body: JSON.stringify({name:productName, color:colorName})})
         .then((response)=> {return response.json();})
         .then((json)=> {if(json.Code == "0") navigate_main(); else fetchError();})
         .catch((error)=>{console.error(error);});
@@ -146,7 +155,7 @@ export default function PutProductScreen ({route, navigation}){
     };
 
     function go_pickCategory(){
-        navigation.navigate('PickCategory', {whereFrom: 2, username:route.params.username, userteam:route.params.userteam, configdata:userConfigdata});
+        navigation.navigate('PickProduct', {whereFrom: 2, username:route.params.username, userteam:route.params.userteam, configdata:userConfigdata, whereAt:1});
     };
 
     function go_pickColor(){
@@ -242,6 +251,18 @@ export default function PutProductScreen ({route, navigation}){
                             />
                         <Text style={styles.buttonTitle}>{prodCol}</Text>
                     </TouchableOpacity>
+                </View>
+            }
+            {prodCat && prodCat === 1 &&
+                <View style={styles.productSearchArea}>
+                        <Image
+                            style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                            source={require('../../../images/putproduct/putname_button.png')}
+                            />
+                        <TextInput
+                            style={styles.textForm}
+                            placeholder={"컬러코드 작성"}
+                            onChangeText = {(text) => setcolorName(text)}/>
                 </View>
             }
             <View style={styles.buttonArea}>

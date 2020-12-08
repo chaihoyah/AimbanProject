@@ -43,7 +43,6 @@ export default function MainScreen ({route, navigation}){
             .then((response)=> {return response.json();})
             .then((json)=> {if(json.Code == "0") setuserConfigdata(json.Data); else fetchError();})
             .catch((error)=>{console.error(error);});
-            console.log(userConfigdata);
         });
     },[navigation]);
 

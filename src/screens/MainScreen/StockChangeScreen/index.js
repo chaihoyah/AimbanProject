@@ -30,7 +30,6 @@ export default function StockChangeScreen ({route, navigation}){
     //route parameters: teamName(Char), productName(Char), productCode(unsigned int), doWhat(0:in, 1:out, 2:change)
     //amount -> 수량 나타냄
     React.useEffect(() =>{
-        console.log(userConfigdata);
         setProductName(route.params?.prodname);
         setProductCode(route.params?.prodcode);
         setProdCat(route.params?.category);
@@ -54,12 +53,13 @@ export default function StockChangeScreen ({route, navigation}){
     };
 
     function go_pickteam(){
-        navigation.navigate('PickTeam', {whereFrom:0});
+        navigation.navigate('PickProduct', {whereFrom:0, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata, whereAt:6});
     };
 
     function go_pickproduct(){
-        navigation.navigate('PickProduct', {whereFrom: 0, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata});
+        navigation.navigate('PickProduct', {whereFrom: 0, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata, whereAt:0});
     };
+
     function do_putin(){
         //입출조정 정보 서버에 넘기기
         try{
@@ -249,9 +249,9 @@ export default function StockChangeScreen ({route, navigation}){
 
     function get_prodname(){
         if(prodCat){
-            if(prodCat === 1) return productName.concat(route.params?.prodtype);
+            if(prodCat === 1) return productName.concat(' - ',get_fabtypetext());
             else if(prodCat === 2) return '부자재 - '.concat(productName);
-            else return productName.concat(route.params?.prodcolor);
+            else return productName.concat(' - ',route.params?.prodcolor);
         }
     };
 
@@ -300,7 +300,7 @@ export default function StockChangeScreen ({route, navigation}){
                         style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
                         source={require('../../../images/changestock/selectproduct_button.png')}
                         />
-                    <Text style={styles.buttonTitle}>{productName}</Text>
+                    <Text style={styles.buttonTitle}>{get_prodname()}</Text>
                 </TouchableOpacity>
             </View>
             <KeyboardAvoidingView  style={styles.textInputArea} behavior="padding">
@@ -374,6 +374,7 @@ const styles = StyleSheet.create({
         backgroundColor:'silver',
         marginLeft: '30%',
         color: 'black',
+        fontSize: RFPercentage(2),
     },
     textInputArea:{
         width: wp('60%'),

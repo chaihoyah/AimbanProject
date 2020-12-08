@@ -19,17 +19,30 @@ import config_data from "../../../../config.json";
 export default function InoutHistoryScreen ({route, navigation}){
     const [inout_obj, setInout_obj] = React.useState(route.params.inoutjson);
     const [inout_arr, setInout_arr] = React.useState([]);
+    const [type_arr, setType_arr] = React.useState([]);
 
     React.useEffect(() => {
         var k = 0;
+        console.log(inout_obj);
+        let tmp = [];
+        let tmp_type = [];
+
         for(var i in inout_obj){
             let date = inout_obj[i].time.slice(0,10);
             let nm = (' '+inout_obj[i].value).slice(1).slice(8,12);
             let amt = inout_obj[i].value.slice(22,23);
-            console.log(typeof(amt));
-            if(inout_obj[i].type === 1) setInout_arr(inout_arr.concat({key:k, team:inout_obj[i].team, time:date, type:"입고", name:nm, amount:amt, user:inout_obj[i].who}));
+            if(inout_obj[i].type === 1) {
+                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"입고", name:nm, amount:amt, user:inout_obj[i].who});
+                tmp_type.push(1);
+            }
+            else if(inout_obj[i].type === 2) {
+                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"출고", name:nm, amount:amt, user:inout_obj[i].who});
+                tmp_type.push(1);
+            }
             k++;
         }
+        setInout_arr(tmp);
+        setType_arr(tmp_type);
     },[navigation]);
 
     function fetchError(){
@@ -52,8 +65,8 @@ export default function InoutHistoryScreen ({route, navigation}){
                 <View style = {styles.scroll}>
                     <FlatList
                         data = {inout_arr}
-                        renderItem={({item}) =>
-                            <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
+                        renderItem={({item, index}) =>
+                            <DataTable style={[(item.type === 1) ? (item.type === 2 ? {backgroundColor:'red', borderRadius: 10, marginBottom:'3%'}: {backgroundColor:'blue', borderRadius: 10, marginBottom:'3%'}): {backgroundColor:'silver', borderRadius: 10, marginBottom:'3%'}]}>
                                 <DataTable.Header>
                                     <DataTable.Title >요청 종류</DataTable.Title>
                                     <DataTable.Title>이름</DataTable.Title>
@@ -70,7 +83,8 @@ export default function InoutHistoryScreen ({route, navigation}){
                                     <DataTable.Cell>{item.team}</DataTable.Cell>
                                     <DataTable.Cell>{item.time}</DataTable.Cell>
                                 </DataTable.Row>
-                            </DataTable>}
+                            </DataTable>
+                        }
                     />
                 </View>
             </View>

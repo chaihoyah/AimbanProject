@@ -9,6 +9,7 @@ import {
     Image,
     FlatList,
     Alert,
+    BackHandler,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
@@ -26,6 +27,15 @@ export default function CheckInoutFinalScreen({route, navigation}){
     var res = [];
 
     React.useLayoutEffect(() => {
+       const backAction = () => {
+            navigation.goBack();
+           return true;
+       };
+
+       const backHandler = BackHandler.addEventListener(
+           "hardwareBackPress",
+           backAction
+       );
        let team_txt = get_teamtext();
        var tmp_arr = [];
        setteamName(team_txt);
