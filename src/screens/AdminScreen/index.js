@@ -8,12 +8,13 @@ import {
     StyleSheet,
     Image,
     Alert,
+    KeyboardAvoidingView,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import config_data from "../../../config.json";
 
-export default function AdminScreen ({navigation}){
+export default function AdminScreen ({navigation, route}){
     const [adminID, setadminID] = React.useState('');
     const [adminpassword, setadminpassword] = React.useState('');
     const [inout_obj, setInout_obj] = React.useState();
@@ -22,6 +23,7 @@ export default function AdminScreen ({navigation}){
     const [fabJson, setfabJson] = React.useState();
     const [subJson, setsubJson] = React.useState();
     const [updateJson, setupdateJson] = React.useState();
+    const [deleteJson, setdeleteJson] = React.useState();
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', ()=>{
@@ -66,6 +68,13 @@ export default function AdminScreen ({navigation}){
             .then((response)=> {return response.json();})
             .then((json)=> {if(json.Code == "0") setupdateJson(json.Data); else fetchError(json);})
             .catch((error)=>{console.error(error);});
+
+            fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_delete_list),
+            {method:'POST',
+            headers: {Accept: 'application/json', 'Content-Type': 'application/json'}})
+            .then((response)=> {return response.json();})
+            .then((json)=> {if(json.Code == "0") setdeleteJson(json.Data); else fetchError(json);})
+            .catch((error)=>{console.error(error);});
         });
     },[navigation]);
 
@@ -88,7 +97,7 @@ export default function AdminScreen ({navigation}){
     };
 
     function loggedin(json){
-        navigation.replace('InAdminStack', {inoutjson:inout_obj, signupjson:signupJson, projson:proJson, fabjson:fabJson, subjson:subJson, updatejson:updateJson});
+        navigation.replace('InAdminStack', {inoutjson:inout_obj, signupjson:signupJson, projson:proJson, fabjson:fabJson, subjson:subJson, updatejson:updateJson, deletejson:deleteJson, configdata:route.params.configdata});
     };
 
     function loginError(){
@@ -106,7 +115,7 @@ export default function AdminScreen ({navigation}){
             <View style={styles.subtitleArea}>
                 <Text style={styles.subtitle}> Administrator Log-in</Text>
             </View>
-            <View style={styles.productSearchArea}>
+            <KeyboardAvoidingView style={styles.productSearchArea} behavior = 'padding'>
                     <Image
                         style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
                         source={require('../../images/adminlogin/adminloginid_image.png')}
@@ -115,8 +124,8 @@ export default function AdminScreen ({navigation}){
                         style={styles.textForm}
                         placeholder={"관리자 ID"}
                         onChangeText = {(ID) => {setadminID(ID)}}/>
-            </View>
-            <View style={styles.productSearchArea}>
+            </KeyboardAvoidingView>
+            <KeyboardAvoidingView style={styles.productSearchArea} behavior = 'padding'>
                     <Image
                         style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
                         source={require('../../images/adminlogin/adminloginpassword_image.png')}
@@ -124,9 +133,10 @@ export default function AdminScreen ({navigation}){
                     <TextInput
                         style={styles.textForm}
                         placeholder={"관리자 비밀번호"}
+                        secureTextEntry={true}
                         onChangeText = {(pwd) => {setadminpassword(pwd)}}/>
-            </View>
-            <View style={styles.buttonArea}>
+            </KeyboardAvoidingView>
+            <KeyboardAvoidingView style={styles.buttonArea} behavior= 'padding'>
                  <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
@@ -136,7 +146,7 @@ export default function AdminScreen ({navigation}){
                         source={require('../../images/login/login_button.png')}
                     />
                  </TouchableOpacity>
-            </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
         );
 }
@@ -153,7 +163,7 @@ const styles = StyleSheet.create({
     titleArea: {
         width: '100%',
         height: hp('7%'),
-        marginTop: hp('10%'),
+        marginTop: hp('5%'),
         alignItems: 'flex-start',
     },
     title: {
@@ -161,7 +171,7 @@ const styles = StyleSheet.create({
     },
     productSearchArea: {
         width: '80%',
-        height: '8%',
+        height: hp('10%'),
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
@@ -169,7 +179,7 @@ const styles = StyleSheet.create({
     },
     subtitleArea: {
         width: '100%',
-        marginBottom: hp('10%'),
+        marginBottom: hp('5%'),
         alignItems: 'flex-start',
     },
     subtitle: {
@@ -182,7 +192,7 @@ const styles = StyleSheet.create({
     },
     buttonArea: {
         width: '95%',
-        height: '9%',
+        height: hp('9%'),
         marginTop: '3%',
         alignItems: 'flex-end',
     },

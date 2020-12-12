@@ -154,8 +154,8 @@ export default function PutProductScreen ({route, navigation}){
         );
     };
 
-    function go_pickCategory(){
-        navigation.navigate('PickProduct', {whereFrom: 2, username:route.params.username, userteam:route.params.userteam, configdata:userConfigdata, whereAt:1});
+    function go_pickCategory(isDelete){
+        navigation.navigate('PickProduct', {whereFrom: 2, username:route.params.username, userteam:route.params.userteam, configdata:userConfigdata, whereAt:1, isproddelete: isDelete});
     };
 
     function go_pickColor(){
@@ -231,7 +231,7 @@ export default function PutProductScreen ({route, navigation}){
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={(x)=>{go_pickCategory()}}>
+                    onPress={(x)=>{go_pickCategory(false)}}>
                     <Image
                         style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
                         source={require('../../../images/putproduct/pickcategory_button.png')}
@@ -265,16 +265,29 @@ export default function PutProductScreen ({route, navigation}){
                             onChangeText = {(text) => setcolorName(text)}/>
                 </View>
             }
-            <View style={styles.buttonArea}>
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.button_small}
-                    onPress={(x)=>{go_Main()}}>
-                    <Image
-                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                        source={require('../../../images/putproduct/requestapproval_button.png')}
-                        />
-                </TouchableOpacity>
+            <View style = {{width:'80%', height: hp('10%'), flexDirection:'row', alignSelf:'center', justifyContent:'space-between'}}>
+                <View style={styles.buttonArea}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.button_small}
+                        onPress={(x)=>{go_pickCategory(true)}}>
+                        <Image
+                            style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                            source={require('../../../images/putproduct/proddelete_button.png')}
+                            />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.buttonArea}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.button_small}
+                        onPress={(x)=>{go_Main()}}>
+                        <Image
+                            style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                            source={require('../../../images/putproduct/requestapproval_button.png')}
+                            />
+                    </TouchableOpacity>
+                </View>
             </View>
 
         </SafeAreaView>
@@ -313,8 +326,8 @@ const styles = StyleSheet.create({
         marginBottom: hp('3%'),
     },
     buttonArea: {
-        width: '80%',
-        height: '10%',
+        width: '45%',
+        height: '100%',
         alignItems: 'center',
         alignSelf: 'center',
     },
@@ -325,9 +338,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     button_small:{
-        width: '40%',
+        width: '80%',
         height: '100%',
-        alignSelf: 'flex-end',
+        justifyContent: 'center',
     },
     buttonTitle:{
         backgroundColor:'silver',

@@ -25,10 +25,8 @@ export default function CheckStockScreen ({route, navigation}){
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
 
     React.useEffect(() =>{
-        console.log(userConfigdata);
         if(route.params?.category){
           setproductCat(check_category());
-            console.log(productCat);
         }
     });
     function go_back(){

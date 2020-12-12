@@ -22,24 +22,14 @@ import PickTeamLoginDetailScreen from './src/screens/LoginScreen/MakeIDScreen/Pi
 import MainScreen from './src/screens/MainScreen';
 //Stock change scenes
 import CheckStockScreen from './src/screens/MainScreen/CheckStockScreen';
-import CheckStockPickOneScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen';
-import CheckInoutFinalScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen/CheckInoutFinalScreen';
-import CheckStockPickTwoScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen/CheckStockPickTwoScreen';
-import CheckStockFinalScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockPickOneScreen/CheckStockPickTwoScreen/CheckStockFinalScreen';
+import CheckInoutFinalScreen from './src/screens/MainScreen/CheckStockScreen/CheckInoutFinalScreen';
+import CheckStockFinalScreen from './src/screens/MainScreen/CheckStockScreen/CheckStockFinalScreen';
 import StockChangeScreen from './src/screens/MainScreen/StockChangeScreen';
 import PutProductScreen from './src/screens/MainScreen/PutProductScreen';
 import PutProductPickColorScreen from './src/screens/MainScreen/PutProductScreen/PutProductPickColorScreen';
 import SettingsScreen from './src/screens/MainScreen/SettingsScreen';
 import SettingsMyinfoScreen from './src/screens/MainScreen/SettingsScreen/SettingsMyinfoScreen';
-import PickTeamScreen from './src/screens/MainScreen/StockChangeScreen/PickTeamScreen';
-import PickTeamDetailScreen from './src/screens/MainScreen/StockChangeScreen/PickTeamScreen/PickTeamDetailScreen';
 import PickProductScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen';
-import PickCategoryScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickCategoryScreen';
-import PickColorScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickColorScreen';
-import PickFabTypeScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickColorScreen/PickFabTypeScreen';
-import PickProductFinalScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickProductFinalScreen';
-import PickKindsScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickCategoryScreen/PickKindsScreen';
-import PickCategoryFinalScreen from './src/screens/MainScreen/StockChangeScreen/PickProductScreen/PickCategoryScreen/PickKindsScreen/PickCategoryFinalScreen';
 
 //Admin scenes
 import AdminScreen from './src/screens/AdminScreen';
@@ -150,26 +140,15 @@ function MainStack({navigation, route}){
     return(
         <Stack_main.Navigator initialRouteName = "Main" screenOptions={{headerShown: false}}>
             <Stack_main.Screen name = "Main" component = {MainScreen} initialParams = {{username:userName, userteam:userTeam, userid: userID}}/>
-
             <Stack_main.Screen name = "CheckStock" component = {CheckStockScreen}/>
-            <Stack_main.Screen name = "CheckStockPickOne" component = {CheckStockPickOneScreen}/>
             <Stack_main.Screen name = "CheckInoutFinal" component = {CheckInoutFinalScreen}/>
-            <Stack_main.Screen name = "CheckStockPickTwo" component = {CheckStockPickTwoScreen}/>
             <Stack_main.Screen name = "CheckStockFinal" component = {CheckStockFinalScreen}/>
             <Stack_main.Screen name = "PutProduct" component = {PutProductScreen}/>
             <Stack_main.Screen name = "PutProductPickColor" component = {PutProductPickColorScreen}/>
             <Stack_main.Screen name = "Settings" component = {SettingsScreen}/>
             <Stack_main.Screen name = "SettingsMyinfo" component = {SettingsMyinfoScreen}/>
             <Stack_main.Screen name = "StockChange" component = {StockChangeScreen}/>
-            <Stack_main.Screen name = "PickTeam" component = {PickTeamScreen}/>
-            <Stack_main.Screen name = "PickTeamDetail" component = {PickTeamDetailScreen}/>
             <Stack_main.Screen name = "PickProduct" component = {PickProductScreen}/>
-            <Stack_main.Screen name = "PickCategory" component = {PickCategoryScreen}/>
-            <Stack_main.Screen name = "PickColor" component = {PickColorScreen}/>
-            <Stack_main.Screen name = "PickFabType" component = {PickFabTypeScreen}/>
-            <Stack_main.Screen name = "PickProductFinal" component = {PickProductFinalScreen}/>
-            <Stack_main.Screen name = "PickKinds" component = {PickKindsScreen}/>
-            <Stack_main.Screen name = "PickCategoryFinal" component = {PickCategoryFinalScreen}/>
 
         </Stack_main.Navigator>
 
@@ -177,10 +156,10 @@ function MainStack({navigation, route}){
 }
 
 function AdminStack({navigation, route}){
-
+    const [userConfig, setuserConfig] = React.useState(route.params.configdata);
     return(
     <Stack_admin.Navigator initialRouteName = "Admin" screenOptions={{headerShown:false}}>
-        <Stack_admin.Screen name = "Admin" component = {AdminScreen}/>
+        <Stack_admin.Screen name = "Admin" component = {AdminScreen} initialParams={{configdata:userConfig}}/>
     </Stack_admin.Navigator>
 
     );
@@ -193,10 +172,12 @@ function InAdminStack({navigation, route}){
     const [fabJson, setfabJson] = React.useState(route.params.fabjson);
     const [subJson, setsubJson] = React.useState(route.params.subjson);
     const [updateJson, setupdateJson] = React.useState(route.params.updatejson);
+    const [deleteJson, setdeleteJson] = React.useState(route.params.deletejson);
+    const [userConfig, setuserConfig] = React.useState(route.params.configdata);
     return(
         <Stack_Inadmin.Navigator tabBarPosition ='bottom' initialRouteName = "InoutHistory" screenOptions={{headerShown:false}}>
-            <Stack_Inadmin.Screen name = "InoutHistory" component = {InoutHistoryScreen} initialParams={{inoutjson: inout_obj}}/>
-            <Stack_Inadmin.Screen name = "ApprovalRequest" component = {ApprovalRequestScreen} initialParams={{signupjson:signupJson, projson:proJson, fabjson:fabJson, subjson:subJson, updatejson:updateJson}}/>
+            <Stack_Inadmin.Screen name = "InoutHistory" component = {InoutHistoryScreen} initialParams={{inoutjson: inout_obj, configdata: userConfig}}/>
+            <Stack_Inadmin.Screen name = "ApprovalRequest" component = {ApprovalRequestScreen} initialParams={{signupjson:signupJson, projson:proJson, fabjson:fabJson, subjson:subJson, updatejson:updateJson, deletejson:deleteJson, configdata:userConfig}}/>
         </Stack_Inadmin.Navigator>
     );
 }

@@ -35,14 +35,14 @@ export default function StockChangeScreen ({route, navigation}){
         setProdCat(route.params?.category);
         setTeam(get_teamtext());
         if(route.params.doWhat === 2){
-            if(route.params?.prodcode){
+            if(route.params?.prodcode && team){
                 var date = moment().utcOffset('+09:00').format('YYYY-MM-DD');
                 fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_get),
                 {method:'POST',
                 headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-                body: JSON.stringify({code:route.params?.prodcode, date:date ,team: route.params.userteam})})
+                body: JSON.stringify({code:route.params?.prodcode, date:date ,team: team})})
                 .then((response)=> {return response.json();})
-                .then((json)=> {if(json.Code == "0") setProdBeforeAmt(json.Data.stock); else fetchError(json);})
+                .then((json)=> {if(json.Code == "0") {setProdBeforeAmt(json.Data.stock);} else fetchError(json);})
                 .catch((error)=>{console.error(error);});
             }
         }
@@ -50,15 +50,15 @@ export default function StockChangeScreen ({route, navigation}){
 
     function go_back(){
         navigation.goBack();
-    };
+    }
 
     function go_pickteam(){
         navigation.navigate('PickProduct', {whereFrom:0, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata, whereAt:6});
-    };
+    }
 
     function go_pickproduct(){
         navigation.navigate('PickProduct', {whereFrom: 0, username:route.params.username,userteam:route.params.userteam, configdata:userConfigdata, whereAt:0});
-    };
+    }
 
     function do_putin(){
         //입출조정 정보 서버에 넘기기
@@ -126,7 +126,7 @@ export default function StockChangeScreen ({route, navigation}){
                 );
             }
         }
-    };
+    }
 
     function finish_stockchange(){
         let final_amount = parseInt(amount);
@@ -148,7 +148,7 @@ export default function StockChangeScreen ({route, navigation}){
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_set),
             {method:'POST',
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-            body: JSON.stringify({time:date, code:productCode, team: route.params.userteam, amount: final_amount})})
+            body: JSON.stringify({time:date, code:productCode, who: route.params.username, team: route.params.userteam, amount: final_amount})})
             .then((response)=> {return response.json();})
             .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError(json);})
             .catch((error)=>{console.error(error);});
@@ -165,7 +165,6 @@ export default function StockChangeScreen ({route, navigation}){
             .catch((error)=>{console.error(error);});
         }
         navigation.navigate('Main');
-        console.log("finished");
     }
 
     function fetchError(json){
@@ -174,7 +173,7 @@ export default function StockChangeScreen ({route, navigation}){
           "네트워크 연결상태를 확인해주세요!"
         );
         console.log(json);
-    };
+    }
 
     function get_headertext(){
         if(route.params.doWhat === 2){
@@ -197,7 +196,7 @@ export default function StockChangeScreen ({route, navigation}){
         else{
             return require('../../../images/changestock/putproduct_image.jpg');
         }
-    };
+    }
 
     function get_teamtext(){
         if(route.params?.teamVal == null) return route.params.userteam;
@@ -239,7 +238,7 @@ export default function StockChangeScreen ({route, navigation}){
             else return null;
         }
         else return null;
-    };
+    }
 
     function get_fabtypetext(){
         if(route.params?.prodtype === 3) return "10T";
@@ -251,9 +250,14 @@ export default function StockChangeScreen ({route, navigation}){
         if(prodCat){
             if(prodCat === 1) return productName.concat(' - ',get_fabtypetext());
             else if(prodCat === 2) return '부자재 - '.concat(productName);
-            else return productName.concat(' - ',route.params?.prodcolor);
+            else {return productName.concat(' - ',route.params?.prodcolor)};
         }
-    };
+    }
+
+    function get_prodBefore(){
+        if(typeof(prodBeforeAmt) === "undefined") return "0";
+        else return prodBeforeAmt;
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -303,6 +307,20 @@ export default function StockChangeScreen ({route, navigation}){
                     <Text style={styles.buttonTitle}>{get_prodname()}</Text>
                 </TouchableOpacity>
             </View>
+            { route.params.doWhat === 2 &&
+                <View style={styles.buttonArea}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.button}
+                        onPress={() => {}}>
+                        <Image
+                            style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                            source={require('../../../images/changestock/currentstock.png')}
+                            />
+                        <Text style={styles.buttonTitle}>{prodBeforeAmt}</Text>
+                    </TouchableOpacity>
+                </View>
+            }
             <KeyboardAvoidingView  style={styles.textInputArea} behavior="padding">
                 <Image
                     style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
@@ -374,7 +392,7 @@ const styles = StyleSheet.create({
         backgroundColor:'silver',
         marginLeft: '30%',
         color: 'black',
-        fontSize: RFPercentage(2),
+        fontSize: RFPercentage(1.5),
     },
     textInputArea:{
         width: wp('60%'),

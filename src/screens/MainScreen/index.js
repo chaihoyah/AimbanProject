@@ -33,7 +33,6 @@ export default function MainScreen ({route, navigation}){
         AsyncStorage.getItem('user_id', (err, result)=>{
             setuserID(result);
         });**/
-        console.log(userID);
        var date = moment().utcOffset('+09:00').format('YYYY-MM-DD');
         const unsubscribe = navigation.addListener('focus', ()=>{
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.user_config),
@@ -64,7 +63,7 @@ export default function MainScreen ({route, navigation}){
         navigation.navigate('PutProduct',{username:userName, userteam:userTeam, configdata:userConfigdata});
     };
     function go_settings(){
-        navigation.navigate('Settings',{username:userName, userteam:userTeam, userid: userID});
+        navigation.navigate('Settings',{username:userName, userteam:userTeam, userid: userID, configdata:userConfigdata});
     };
 
     return (

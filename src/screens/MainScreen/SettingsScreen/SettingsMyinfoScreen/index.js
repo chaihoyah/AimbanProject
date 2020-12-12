@@ -8,9 +8,11 @@ import {
     StyleSheet,
     Image,
     FlatList,
+    Alert,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
+import config_data from "../../../../../config.json";
 
 export default function SettingsMyinfoScreen({route, navigation}){
 
@@ -24,6 +26,31 @@ export default function SettingsMyinfoScreen({route, navigation}){
         else if (team === "미싱팀" || team === "생산지원팀") return "생산 2부";
         else if (team === "헤드레스트팀" || team === "용품팀") return "생산 3부";
         else if (team === "개발팀") return "개발1부";
+    };
+
+    function ask_deleteID(){
+        Alert.alert(
+          "정말 아이디 삭제를 요청하시겠습니까?",
+          "",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            { text: "OK", onPress: () => {go_deleteID()} }
+          ],
+          { cancelable: false }
+        );
+    };
+
+    function go_deleteID(){
+        fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.delete_user),
+        {method:'POST',
+        headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+        body: JSON.stringify({id:route.params.userid})})
+        .then((response)=> {return response.json();})
+        .then((json)=> {if(json.Code == "0") navigation.goBack(); else fetchError();})
+        .catch((error)=>{console.error(error);});
     };
 
     return (
@@ -58,6 +85,18 @@ export default function SettingsMyinfoScreen({route, navigation}){
                     <Text style={{height:'10%', color:'black',fontSize:RFPercentage('4'),marginBottom:'5%'}}>팀: {route.params.userteam}</Text>
                 </View>
             </View>
+            <View style={styles.buttonArea}>
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.button_small}
+                    onPress={(x)=>{ask_deleteID()}}>
+                    <Image
+                        style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
+                        source={require('../../../../images/main/2box.png')}
+                        />
+                    <Text style={{alignSelf:'center',fontSize:RFPercentage(3), color:'red'}}>아이디 삭제</Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 }
@@ -80,12 +119,10 @@ const styles = StyleSheet.create({
         marginBottom: '5%',
     },
     buttonArea: {
-        width: '70%',
+        width: '100%',
         height: hp('10%'),
         alignItems: 'center',
-        justifyContent: 'center',
         alignSelf: 'center',
-        marginBottom: '4%',
     },
     scroll:{
         width: '100%',
@@ -104,6 +141,13 @@ const styles = StyleSheet.create({
     buttonTitle: {
         color: 'black',
         fontSize: RFPercentage('3'),
+    },
+    button_small:{
+        width: '30%',
+        height: '100%',
+        justifyContent: 'center',
+        backgroundColor: 'red',
+        borderRadius: 20,
     },
     textArea:{
         width: '100%',

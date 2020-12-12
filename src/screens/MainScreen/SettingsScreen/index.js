@@ -28,7 +28,7 @@ export default function SettingsScreen ({route, navigation}){
     };
 
     function go_Admin(){
-        navigation.navigate('AdminStack');
+        navigation.navigate('AdminStack', {configdata:route.params.configdata});
     };
 
     return (

@@ -16,6 +16,7 @@ import {
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import config_data from "../../../../../config.json";
 
 export default function PickProductScreen ({route, navigation}){
     const [productName, setproductName] = React.useState("");
@@ -29,9 +30,11 @@ export default function PickProductScreen ({route, navigation}){
     const [isShowingResults, setisShowingResults] = React.useState(false);
     // 0 제품선택, 1 카테고리 선택, 2 제품_카테고리 선택, 3 자동차 용품_카테고리 선택, 4 제품 최종 나열, 5 컬러 선택, 6 팀_그룹 선택, 7 팀_팀 선택, 8 원단_타입 선택
     const [whereAt, setwhereAt] = React.useState(route.params.whereAt);
+    const [showAll, setshowAll] = React.useState(false);
 
     //PickCategory Const 들
     const [isSewingteam, setisSewingteam] = React.useState(false);
+    const [isProdDelete, setisProdDelete] = React.useState(route.params.isproddelete);
 
     //PickProductFinal Const 들
     const [prodArray, setprodArray] = React.useState([]);
@@ -51,7 +54,7 @@ export default function PickProductScreen ({route, navigation}){
     //whereFrom 0: 입출조정 1: 재고확인 2: 제품등록 3: 재고확인-입출고내역확인
 
     React.useEffect(() =>{
-        if(route.params.userteam === "개발팀"){setisSewingteam(true)};
+        if(route.params.userteam === "재단팀"){setisSewingteam(true)};
 
         const backAction = () => {
             if(path.length>1){
@@ -61,8 +64,10 @@ export default function PickProductScreen ({route, navigation}){
             else if(path.length === 1){
                 let current = path.pop();
                 if(current === 7) setwhereAt(6);
-                else if(current === 2) setwhereAt(1);
+                else if(current === 2 || current === 4) setwhereAt(1);
                 else setwhereAt(0);
+
+                setshowAll(false);
             }
             else{
                 navigation.goBack();
@@ -84,6 +89,12 @@ export default function PickProductScreen ({route, navigation}){
         setwhereAt(1);
     };
 
+    function go_showAll(){
+        setPath(path.concat(6));
+        setshowAll(true);
+        setwhereAt(6);
+    };
+
     //PickCategory 함수들 (제품,원단,부자재 선택)
 
     function go_afterCategory_inside(category){
@@ -93,8 +104,24 @@ export default function PickProductScreen ({route, navigation}){
                 setwhereAt(2);
                 setprodCat(category)
             }
-            else if(category === 1) navigation.navigate('PutProduct', {category:category});
-            else if(category === 2) navigation.navigate('PutProduct', {category:category});
+            else if(!isProdDelete){
+                if(category === 1) navigation.navigate('PutProduct', {category:category});
+                else if(category === 2) navigation.navigate('PutProduct', {category:category});
+            }
+            else{
+                if(category === 1) {
+                    setPath(path.concat(5));
+                    setprodCat(category);
+                    setcolorArray(get_colorArray(category, "fab"));
+                    setwhereAt(5);
+                }
+                else if(category === 2) {
+                    setPath(path.concat(4));
+                    setprodCat(category);
+                    setprodArray(get_prodArray(category));
+                    setwhereAt(4);
+                }
+            }
         }
         else{
             if(category === 0) {
@@ -132,8 +159,15 @@ export default function PickProductScreen ({route, navigation}){
                  setwhereAt(3);
                  setprodCat(category);
              }
-            else
-                navigation.navigate('PutProduct', {category: category});
+            else{
+                if(!isProdDelete) navigation.navigate('PutProduct', {category: category});
+                else{
+                    setPath(path.concat(4));
+                    setprodCat(category);
+                    setprodArray(get_prodArray(category));
+                    setwhereAt(4);
+                }
+            }
         }
         else{
             if(category === 11) {
@@ -154,7 +188,13 @@ export default function PickProductScreen ({route, navigation}){
 
     function go_afterPickCatFinal_inside(category){
         if(route.params.whereFrom === 2){
-            navigation.navigate('PutProduct', {category: category});
+            if(!isProdDelete) navigation.navigate('PutProduct', {category: category});
+            else{
+                setPath(path.concat(4));
+                setprodCat(category);
+                setprodArray(get_prodArray(category));
+                setwhereAt(4);
+            }
         }
         else{
             setPath(path.concat(4));
@@ -175,6 +215,22 @@ export default function PickProductScreen ({route, navigation}){
                 setPath(path.concat(6));
                 setwhereAt(6);
             }
+            else if(route.params.whereFrom === 2){
+                if(isProdDelete){
+                    Alert.alert(
+                      "정말 해당 상품 삭제 요청을 보내시겠습니까?",
+                      "제품명: ".concat(name),
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel"
+                        },
+                        { text: "OK", onPress: () => {finish_Delete(code)} }
+                      ],
+                      { cancelable: false }
+                    );
+                }
+            }
         }
         else{
             //제품일때
@@ -188,6 +244,14 @@ export default function PickProductScreen ({route, navigation}){
                 setproductName(name);
                 setPath(path.concat(6));
                 setwhereAt(6);
+            }
+            else if(route.params.whereFrom === 2){
+                if(isProdDelete){
+                    setPath(path.concat(5));
+                    setproductName(name);
+                    setcolorArray(get_colorArray(prodCat, name));
+                    setwhereAt(5);
+                }
             }
         }
     };
@@ -323,10 +387,42 @@ export default function PickProductScreen ({route, navigation}){
                 setPath(path.concat(8));
                 setwhereAt(8);
             }
+            else if(route.params.whereFrom === 2){
+                if(isProdDelete){
+                    Alert.alert(
+                      "정말 해당 상품 삭제 요청을 보내시겠습니까?",
+                      "제품명: ".concat("원단 - ", name),
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel"
+                        },
+                        { text: "OK", onPress: () => {finish_Delete(code)} }
+                      ],
+                      { cancelable: false }
+                    );
+                }
+            }
         }
         else{
             //제품일때
             if (route.params.whereFrom === 0 ) navigation.navigate('StockChange', {category:prodCat, prodname:productName, prodcode:code, prodcolor:name});
+            else if(route.params.whereFrom === 2){
+                if(isProdDelete){
+                    Alert.alert(
+                      "정말 해당 상품 삭제 요청을 보내시겠습니까?",
+                      "제품명: ".concat(productName, " - ", name),
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel"
+                        },
+                        { text: "OK", onPress: () => {finish_Delete(code)} }
+                      ],
+                      { cancelable: false }
+                    );
+                }
+            }
         }
     };
 
@@ -349,7 +445,6 @@ export default function PickProductScreen ({route, navigation}){
                 if(userConfigdata.pro[i].name === name) name_arr.push({key:userConfigdata.pro[i].color, code:userConfigdata.pro[i].code});
             };
         }
-
         return Array.from(new Set(name_arr));
     };
 
@@ -363,25 +458,29 @@ export default function PickProductScreen ({route, navigation}){
     function go_afterPickTeamDetail(teamname){
         setteamVal(teamname);
         if(route.params.whereFrom === 1){
-            var prod = get_validdata();
-            console.log(prod);
-            if(prod.length>0){
-                navigation.navigate('CheckStockFinal', {groupVal: groupVal, teamVal: teamname, configdata:prod});
+            if(!showAll){
+                var prod = get_validdata();
+                if(prod.length>0){
+                    navigation.navigate('CheckStockFinal', {groupVal: groupVal, teamVal: teamname, configdata:prod});
+                }
+                else{
+                    if(prodCat === 1) {
+                        navigation.navigate('CheckStockFinal', {groupVal: groupVal, teamVal: teamname, configdata:colorArray});
+                    }
+                    else {
+                        navigation.navigate('CheckStockFinal', {groupVal: groupVal, teamVal: teamname, configdata:objArray});
+                    }
+                }
             }
             else{
-                if(prodCat === 1) {
-                    navigation.navigate('CheckStockFinal', {groupVal: groupVal, teamVal: teamname, configdata:colorArray});
-                }
-                else {
-                    navigation.navigate('CheckStockFinal', {groupVal: groupVal, teamVal: teamname, configdata:objArray});
-                }
+                navigation.navigate('CheckStockFinal', {groupVal: groupVal, teamVal: teamname, showallconfigdata:userConfigdata});
             }
         }
         else if(route.params.whereFrom === 0){
-            navigation.navigate('StockChange', {groupVal: route.params.groupVal, teamVal: teamname});
+            navigation.navigate('StockChange', {groupVal: groupVal, teamVal: teamname});
         }
         else if (route.params.whereFrom === 3){
-            navigation.navigate('CheckInoutFinal', {groupVal: route.params.groupVal, teamVal: teamname, userdata:userConfigdata.user});
+            navigation.navigate('CheckInoutFinal', {groupVal: groupVal, teamVal: teamname, userdata:userConfigdata.user, configdata:userConfigdata});
         }
     };
 
@@ -417,7 +516,6 @@ export default function PickProductScreen ({route, navigation}){
             if(prod.length > 0){
                 setPath(path.concat(6));
                 setwhereAt(6);
-                //navigation.navigate('CheckStockPickOne', {configdata:prod});
             }
             else{
                 Alert.alert(
@@ -470,6 +568,7 @@ export default function PickProductScreen ({route, navigation}){
             if(current === 7) setwhereAt(6);
             else if(current === 2) setwhereAt(1);
             else setwhereAt(0);
+            setshowAll(false);
         }
         else{
             navigation.goBack();
@@ -524,6 +623,24 @@ export default function PickProductScreen ({route, navigation}){
         setisShowingResults(false);
     }
      setproductName(query);
+    };
+
+    function finish_Delete(code){
+            fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.delete_code),
+            {method:'POST',
+            headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+            body: JSON.stringify({code:code})})
+            .then((response)=> {return response.json();})
+            .then((json)=> {if(json.Code == "0") {navigation.navigate('Main');} else fetchError(json);})
+            .catch((error)=>{console.error(error);});
+    };
+
+    function fetchError(json){
+        Alert.alert(
+          "서버 연결 실패",
+          "네트워크 연결상태를 확인해주세요!"
+        );
+        console.log(json);
     };
 
     return (
@@ -607,10 +724,10 @@ export default function PickProductScreen ({route, navigation}){
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.button}
-                            onPress={(x)=>{go_Categoryinside()}}>
+                            onPress={(x)=>{go_showAll()}}>
                             <Image
                                 style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                                source={require('../../../../images/checkstock/category_button.png')}
+                                source={require('../../../../images/checkstock/checkstockteam_button.png')}
                                 />
                         </TouchableOpacity>
                     </View>
@@ -663,7 +780,7 @@ export default function PickProductScreen ({route, navigation}){
                             />
                     </TouchableOpacity>
                 </View>
-                {isSewingteam &&
+                {(isSewingteam || route.params.whereFrom === 1) &&
                     <View style={styles.buttonArea}>
                         <TouchableOpacity
                             activeOpacity={0.8}
@@ -1137,7 +1254,7 @@ export default function PickProductScreen ({route, navigation}){
                             source={require('../../../../images/checkstock/back_button.jpg')}
                         />
                     </TouchableOpacity>
-                    <Text style={{height:'70%',width:'60%', color:'black',fontSize:RFPercentage('4.5')}}>원단 종류 선택</Text>
+                    <Text style={{height:'70%',width:'60%', color:'black',fontSize:RFPercentage('4')}}>원단 종류 선택</Text>
                     <View style={{width:'15%', height:'100%', flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
                         <Image
                             style={{width:'50%',height:'50%',resizeMode:'contain',marginRight:'1%'}}

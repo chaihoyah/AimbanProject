@@ -45,7 +45,7 @@ export default function LoginScreen ({navigation}){
     function loggedin(json){
     //AutoLogin 넣기, name, team 서버 요청 받아서 넣기
         //
-        AsyncStorage.setItem('user_loginauto', JSON.stringify(false), ()=>{console.log("false set")});
+        AsyncStorage.setItem('user_loginauto', JSON.stringify(false), ()=>{});
         AsyncStorage.setItem('user_id', text_id, ()=>{});
         AsyncStorage.setItem('user_pwd', text_pwd, ()=>{});
         AsyncStorage.setItem('user_name', json.Data.name, ()=>{});
@@ -103,6 +103,7 @@ export default function LoginScreen ({navigation}){
                     <TextInput
                         style={styles.textForm}
                         onChangeText = {(text) => {setPwd(text)}}
+                        secureTextEntry={true}
                         placeholder={"비밀번호를 입력해 주세요"}/>
                 </View>
             </View>
