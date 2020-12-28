@@ -8,6 +8,7 @@ import {
     StyleSheet,
     Image,
     FlatList,
+    ScrollView,
     Alert,
     BackHandler,
 } from 'react-native';
@@ -17,6 +18,7 @@ import moment from 'moment';
 import {DataTable} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import config_data from "../../../../../config.json";
+import {Table, Row} from 'react-native-table-component';
 
 export default function CheckInoutFinalScreen({route, navigation}){
     const [userdata, setUserdata] = React.useState(route.params.userdata);
@@ -313,7 +315,7 @@ export default function CheckInoutFinalScreen({route, navigation}){
                 <Text style={{fontSize:RFPercentage('4.5'),color:'black',alignSelf:'center'}}>{teamName} - 입출고내역</Text>
             </View>
             <View style={styles.pickerArea}>
-                <View style = {{height:'70%',width:'40%',borderWidth: 1,borderColor:'black', borderRadius:10}}>
+                <View style = {{height:'70%',width:'45%',borderWidth: 1,borderColor:'black', borderRadius:10}}>
                     <Picker
                       selectedValue={currentUser}
                       style={{height: '100%', width: '100%', color: 'blue'}}
@@ -325,7 +327,7 @@ export default function CheckInoutFinalScreen({route, navigation}){
                       })}
                     </Picker>
                 </View>
-                <View style = {{height:'70%',width:'40%',borderWidth: 1,borderColor:'black', borderRadius:10}}>
+                <View style = {{height:'70%',width:'45%',borderWidth: 1,borderColor:'black', borderRadius:10}}>
                     <Picker
                       selectedValue={currentDate}
                       style={{height: '100%', width: '100%', color: 'blue'}}
@@ -344,25 +346,14 @@ export default function CheckInoutFinalScreen({route, navigation}){
                     <FlatList
                         data = {userDateArr}
                         renderItem={({item}) =>
-                            <DataTable style={[(item.amount > 0) ? {backgroundColor:'#DBEBF0', borderRadius: 10, marginBottom:'3%'}: {backgroundColor:'#D9DEF0', borderRadius: 10, marginBottom:'3%'}]}>
-                                <DataTable.Header>
-                                    <DataTable.Title style={{flex:1.3}}>종류</DataTable.Title>
-                                    <DataTable.Title style={{flex:2}}>이름</DataTable.Title>
-                                    <DataTable.Title style={{flex:6.5}}>제품 이름</DataTable.Title>
-                                    <DataTable.Title style={{flex:1.3}}>수량</DataTable.Title>
-                                    <DataTable.Title style={{flex:3}}>팀</DataTable.Title>
-                                    <DataTable.Title style={{flex:3}}>날짜</DataTable.Title>
-                                </DataTable.Header>
-                                <DataTable.Row>
-                                    <DataTable.Cell style = {{flex:1.3}}>{item.type}</DataTable.Cell>
-                                    <DataTable.Cell style = {{flex:2}}>{item.user}</DataTable.Cell>
-                                    <DataTable.Cell style = {{flex:6.5}}>{item.name}</DataTable.Cell>
-                                    <DataTable.Cell style = {{flex:1.3}}>{String(item.amount)}</DataTable.Cell>
-                                    <DataTable.Cell style = {{flex:3}}>{item.team}</DataTable.Cell>
-                                    <DataTable.Cell style = {{flex:3}}>{item.time}</DataTable.Cell>
-                                </DataTable.Row>
-                            </DataTable>}
-                            keyExtractor = {(item) => item.key.toString()}
+                            <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                <Table borderStyle = {{borderWidth: 0.7, borderColor: 'black'}} style ={[(item.amount > 0) ? {backgroundColor:'#DBEBF0',marginBottom:'3%'}: {backgroundColor:'#D9DEF0',marginBottom:'3%'}]}>
+                                    <Row data={['종류', '이름','제품 이름',  '수량', '날짜']} widthArr={[wp('7%'),wp('13%'),wp('50%'),wp('8%'),wp('17%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                    <Row data={[item.type, item.user, item.name,String(item.amount), item.time]} widthArr={[wp('7%'),wp('13%'),wp('50%'),wp('8%'),wp('17%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                </Table>
+                            </ScrollView>
+                        }
+                        keyExtractor = {(item) => item.key.toString()}
                     />
                 </View>
             </View>
@@ -376,8 +367,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         paddingTop: hp('3%'),
         paddingBottom: hp('3%'),
-        paddingLeft: wp('5%'),
-        paddingRight: wp('5%'),
+        paddingLeft: wp('1%'),
+        paddingRight: wp('1%'),
     },
     buttonArea: {
         width: '70%',
@@ -388,7 +379,7 @@ const styles = StyleSheet.create({
         marginBottom: '4%',
     },
     scroll:{
-        width: '95%',
+        width: '98%',
         height: '100%',
         borderRadius: 20,
         paddingTop: '5%',

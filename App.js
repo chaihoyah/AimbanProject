@@ -82,7 +82,6 @@ function getHeaderTitle_main(route) {
         case 'Main':
             return '메인화면';
         case 'StockChange':
-            //입, 출, 조정 나누기
             return '입고 정보';
         case 'PickTeam':
             return '부서 선택';
@@ -110,31 +109,7 @@ function MainStack({navigation, route}){
     const [userTeam, setuserTeam] = React.useState(route.params.userteam);
     const [userID, setuserID] = React.useState(route.params.userid);
     React.useLayoutEffect(() => {
-        navigation.setOptions({
-        headerTitle: getHeaderTitle_main(route),
-        headerStyle: { backgroundColor: '#621FF7'},
-        headerTintColor: '#fff',
-        headerTitleAlign: 'center',
-        headerTitleStyle: { fontWeight: 'bold'},
-        headerLeft: () => (
-            <Button
-                onPress={() => navigation.goBack()}
-                title= 'Back'
-                //color = '#fff'
-            />
-        ),
-        headerRight: () => (
-            <Button
-                onPress={() => alert('Logout Button!')}
-                title= 'Logout'
-                //color = '#fff'
-            />
-        ),
-/*        header: ({goBack}) => ({
-            left: <headerBackButton onPress/>
-        }),*/
 
-        });
     }, [navigation, route]);
 //StockChangeScreen initalparam에 user 팀 넣기
     return(
@@ -184,25 +159,8 @@ function InAdminStack({navigation, route}){
 
 class App extends Component{
     static navigationOptions = {header:null};
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            address: '',
-            isLoading: false,
-        }
-    }
-
-    writeAddress = () => {
-        this.setState({
-            address : '경기도 안양시'
-        })
-    }
 
     render(){
-          if (this.state.isLoading){
-            return '<SplashScreen />';
-          }
           return (
 
             <NavigationContainer>
@@ -221,45 +179,6 @@ const styles = StyleSheet.create({
   container: {
     flex : 1,
     backgroundColor : 'silver',
-  },
-  main_view: {
-    flex : 1,
-    justifyContent : 'center',
-    alignItems : 'center'
-  },
-
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
   },
 });
 

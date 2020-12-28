@@ -8,6 +8,7 @@ import {
     StyleSheet,
     Image,
     FlatList,
+    ScrollView,
     Alert,
     BackHandler,
 } from 'react-native';
@@ -16,6 +17,7 @@ import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import moment from 'moment';
 import {DataTable, Provider as PaperProvider} from 'react-native-paper';
 import config_data from "../../../../../config.json";
+import {Table, Row} from 'react-native-table-component';
 
 export default function CheckStockFinalScreen({route, navigation}){
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
@@ -212,27 +214,19 @@ export default function CheckStockFinalScreen({route, navigation}){
                 </TouchableOpacity>
                 <Text style={{fontSize:RFPercentage('4.5'),color:'black',alignSelf:'center'}}>{teamName} - {prodName}</Text>
             </View>
-            <View style={{backgroundColor:'silver', width:'100%', height: hp('75%'), borderRadius: 20}}>
+            <View style={{backgroundColor:'silver', width:'100%', height: hp('75%'), borderRadius: 20, alignItems:'center'}}>
                 <View style = {styles.scroll}>
                     <FlatList
                         data = {prodArray}
                         renderItem={({item,index}) =>
-                    <View style={styles.buttonArea}>
-                        <DataTable style={{backgroundColor:'white',borderRadius: 20}}>
-                            <DataTable.Header>
-                                <DataTable.Title >제품 이름</DataTable.Title>
-                                <DataTable.Title>색상</DataTable.Title>
-                                <DataTable.Title>재고</DataTable.Title>
-                            </DataTable.Header>
-                            <DataTable.Row>
-                                <DataTable.Cell>{item.name}</DataTable.Cell>
-                                <DataTable.Cell>{item.color}</DataTable.Cell>
-                                <DataTable.Cell>{stockArray[index]}</DataTable.Cell>
-                            </DataTable.Row>
-                        </DataTable>
-                    </View>
-                   }
-                   keyExtractor = {(item) => item.key.toString()}
+                            <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                <Table borderStyle = {{borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#DBEBF0', alignSelf:'center'}}>
+                                    <Row data={['제품 이름', '색상','재고']} widthArr={[wp('50%'),wp('23%'),wp('22%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                    <Row data={[item.name, item.color, stockArray[index]]} widthArr={[wp('50%'),wp('23%'),wp('22%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                </Table>
+                            </ScrollView>
+                        }
+                        keyExtractor = {(item) => item.key.toString()}
                    />
                 </View>
             </View>
@@ -246,18 +240,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         paddingTop: hp('3%'),
         paddingBottom: hp('3%'),
-        paddingLeft: wp('5%'),
-        paddingRight: wp('5%'),
+        paddingLeft: wp('1%'),
+        paddingRight: wp('1%'),
     },
     buttonArea: {
-        width: '90%',
+        width: '98%',
         alignSelf: 'center',
         marginBottom: '2%',
     },
     scroll:{
-        width: '100%',
+        width: '98%',
         height: '100%',
-        backgroundColor: 'silver',
         borderRadius: 20,
         paddingTop: '5%',
     },

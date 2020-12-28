@@ -86,7 +86,7 @@ export default function StockChangeScreen ({route, navigation}){
             if(prodCat === 1){
                 Alert.alert(
                   "정보 확인",
-                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", route.params.userteam, "\n", "제품: ", productName.concat('-', get_fabtypetext()), "\n", "수량: ",amount),
+                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", team, "\n", "제품: ", productName.concat('-', get_fabtypetext()), "\n", "수량: ",amount),
                   [
                     {
                       text: "Cancel",
@@ -100,7 +100,7 @@ export default function StockChangeScreen ({route, navigation}){
             else if(prodCat === 2){
                 Alert.alert(
                   "정보 확인",
-                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", route.params.userteam, "\n", "제품: ", productName, "\n", "수량: ",amount),
+                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", team, "\n", "제품: ", productName, "\n", "수량: ",amount),
                   [
                     {
                       text: "Cancel",
@@ -111,10 +111,11 @@ export default function StockChangeScreen ({route, navigation}){
                   { cancelable: false }
                 );
             }
+
             else{
                 Alert.alert(
                   "정보 확인",
-                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", route.params.userteam, "\n", "제품: ", productName.concat('-', route.params?.prodcolor), "\n", "수량: ",amount),
+                  "사용자 이름: ".concat(route.params.username, "\n", "팀: ", team, "\n", "제품: ", productName.concat('-', route.params?.prodcolor), "\n", "수량: ",amount),
                   [
                     {
                       text: "Cancel",
@@ -136,7 +137,7 @@ export default function StockChangeScreen ({route, navigation}){
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_update),
             {method:'POST',
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-            body: JSON.stringify({code:productCode, date:date, before:prodBeforeAmt, after:final_amount, id:route.params.userid, team:route.params.userteam})})
+            body: JSON.stringify({code:productCode, date:date, before:prodBeforeAmt, after:final_amount, id:route.params.userid, team:team})})
             .then((response)=> {return response.json();})
             .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError(json);})
             .catch((error)=>{console.error(error);});
@@ -148,7 +149,7 @@ export default function StockChangeScreen ({route, navigation}){
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_set),
             {method:'POST',
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-            body: JSON.stringify({time:date, code:productCode, who: route.params.username, team: route.params.userteam, amount: final_amount})})
+            body: JSON.stringify({time:date, code:productCode, who: route.params.username, team: team, amount: final_amount})})
             .then((response)=> {return response.json();})
             .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError(json);})
             .catch((error)=>{console.error(error);});
@@ -159,7 +160,7 @@ export default function StockChangeScreen ({route, navigation}){
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.stock_set),
             {method:'POST',
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-            body: JSON.stringify({time:date, code:productCode, who: route.params.username, team: route.params.userteam, amount: final_amount})})
+            body: JSON.stringify({time:date, code:productCode, who: route.params.username, team: team, amount: final_amount})})
             .then((response)=> {return response.json();})
             .then((json)=> {if(json.Code == "0") console.log("success"); else fetchError(json);})
             .catch((error)=>{console.error(error);});

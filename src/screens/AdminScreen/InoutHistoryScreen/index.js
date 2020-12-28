@@ -15,6 +15,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import {DataTable} from 'react-native-paper';
 import config_data from "../../../../config.json";
+import {Table, Row} from 'react-native-table-component';
 
 export default function InoutHistoryScreen ({route, navigation}){
     const [inout_obj, setInout_obj] = React.useState(route.params.inoutjson.reverse());
@@ -28,10 +29,11 @@ export default function InoutHistoryScreen ({route, navigation}){
         var fab = userConfigdata.fab;
         var pro = userConfigdata.pro;
         var sub = userConfigdata.sub;
+        console.log(inout_obj);
         for(let i=0;i<inout_obj.length;i++){
             let date = inout_obj[i].time.slice(0,10);
             let nm = Number((' '+inout_obj[i].value).slice(1).slice(8,12));
-            let amt = inout_obj[i].value.slice(22,23);
+            let par = JSON.parse(inout_obj[i].value);
             var real_nm;
             if(nm<2000){
                 let nm_filtered = pro.filter((element) => element.code === nm);
@@ -50,16 +52,16 @@ export default function InoutHistoryScreen ({route, navigation}){
                 real_nm = '부자재'.concat('-',nm_filtered[0].name);
             }
             if(inout_obj[i].type === 1) {
-                let amt = inout_obj[i].value.slice(22,23);
-                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"입고", name:real_nm, amount:amt, user:inout_obj[i].who, typenum:1});
+
+                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"입고", name:real_nm, amount:par.amount, user:inout_obj[i].who, typenum:1});
             }
             else if(inout_obj[i].type === 2) {
-                let amt = inout_obj[i].value.slice(23,24);
-                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"출고", name:real_nm, amount:amt, user:inout_obj[i].who, typenum:2});
+
+                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"출고", name:real_nm, amount:par.amount, user:inout_obj[i].who, typenum:2});
             }
             else if(inout_obj[i].type === 3){
-                let amt = inout_obj[i].value.slice(22,24).concat("->", inout_obj[i].value.slice(33,35))
-                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"조정", name:real_nm, bef:inout_obj[i].value.slice(22,24), aft:inout_obj[i].value.slice(33,35),typenum:3});
+
+                tmp.push({key:k, team:inout_obj[i].team, time:date, type:"조정", name:real_nm, bef:par.before, aft:par.after, typenum:3});
             }
             k++;
         }
@@ -89,44 +91,20 @@ export default function InoutHistoryScreen ({route, navigation}){
                         renderItem={({item, index}) =>
                             <View style = {{width:'90%', alignSelf:'center'}}>
                             {item.typenum !== 3 &&
-                                <DataTable style={[(item.typenum === 1) ? {backgroundColor:'#DBEBF0', borderRadius: 10, marginBottom:'3%'}: {backgroundColor:'#D9DEF0', borderRadius: 10, marginBottom:'3%'}]}>
-                                    <DataTable.Header>
-                                        <DataTable.Title style ={{flex:1.3}}>종류</DataTable.Title>
-                                        <DataTable.Title style ={{flex:3.5}}>이름</DataTable.Title>
-                                        <DataTable.Title style ={{flex:5}}>제품 이름</DataTable.Title>
-                                        <DataTable.Title style ={{flex:1}}>수량</DataTable.Title>
-                                        <DataTable.Title style ={{flex:3}}>팀</DataTable.Title>
-                                        <DataTable.Title style ={{flex:4}}>날짜</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell style ={{flex:1.3}}>{item.type}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:3.5}}>{item.user}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:5}}>{String(item.name)}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:1}}>{String(item.amount)}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:3}}>{item.team}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:4}}>{item.time}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>
+                                <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                    <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={[(item.typenum === 1) ? {backgroundColor:'#DBEBF0'}: {backgroundColor:'#D9DEF0'}]}>
+                                        <Row data={['요청 종류', '수량', '제품 이름', '이름', '팀', '날짜']} widthArr={[wp('12%'),wp('5%'),wp('26%'),wp('12%'),wp('16%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                        <Row data={[item.type, String(item.amount), String(item.name), item.user, item.team, item.time]} widthArr={[wp('12%'),wp('5%'),wp('26%'),wp('12%'),wp('16%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                    </Table>
+                                </ScrollView>
                                 }
                             {item.typenum === 3 &&
-                                <DataTable style={{backgroundColor:'silver', borderRadius: 10, marginBottom:'3%'}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title style ={{flex:1.3}}>종류</DataTable.Title>
-                                        <DataTable.Title style ={{flex:5}}>제품 이름</DataTable.Title>
-                                        <DataTable.Title style ={{flex:1.3}}>변경 전</DataTable.Title>
-                                        <DataTable.Title style ={{flex:1.3}}>변경 후</DataTable.Title>
-                                        <DataTable.Title style ={{flex:3}}>팀</DataTable.Title>
-                                        <DataTable.Title style ={{flex:4}}>날짜</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell style ={{flex:1.3, fontSize:RFPercentage(1)}}>{item.type}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:5}}>{String(item.name)}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:1.3}}>{String(item.bef)}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:1.3}}>{String(item.aft)}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:3}}>{item.team}</DataTable.Cell>
-                                        <DataTable.Cell style ={{flex:4}}>{item.time}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>
+                                <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                    <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#EBD9F0'}}>
+                                        <Row data={['요청 종류', '전', '후','제품 이름',  '팀', '날짜']} widthArr={[wp('12%'),wp('5%'),wp('5%'),wp('36%'),wp('13%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                        <Row data={[item.type, String(item.bef), String(item.aft),String(item.name),item.team, item.time]} widthArr={[wp('12%'),wp('5%'),wp('5%'),wp('36%'),wp('13%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                    </Table>
+                                </ScrollView>
                                 }
                             </View>
                         }

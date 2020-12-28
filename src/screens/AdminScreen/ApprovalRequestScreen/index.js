@@ -17,6 +17,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import {DataTable} from 'react-native-paper';
 import config_data from "../../../../config.json";
+import {Table, Row} from 'react-native-table-component';
 
 export default function ApprovalRequestScreen ({route, navigation}){
     const [buttonText, setbuttonText] = React.useState('선택');
@@ -415,7 +416,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
                         <Text style={{fontSize:RFPercentage(3), marginBottom:'4%'}}>승인 목록</Text>
                     </View>
                     {isSelectChecked &&
-                    <View style={{width:'37%', justifyContent:'center',alignItems:'flex-end'}}>
+                    <View style={{width:'38%', justifyContent:'center',alignItems:'flex-end'}}>
                         <CheckBox
                             disabled={false}
                             value={allCheck}
@@ -430,96 +431,62 @@ export default function ApprovalRequestScreen ({route, navigation}){
                         renderItem={({item, index}) =>
                         <View style = {{flexDirection:'row', justifyContent:'center', marginBottom:'3%'}}>
                             <View style = {{width:'90%'}}>
-                                {item.cat===0 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title >요청 종류</DataTable.Title>
-                                        <DataTable.Title>이름</DataTable.Title>
-                                        <DataTable.Title>ID</DataTable.Title>
-                                        <DataTable.Title>부서</DataTable.Title>
-                                        <DataTable.Title>팀</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell>{item.category}</DataTable.Cell>
-                                        <DataTable.Cell>{item.name}</DataTable.Cell>
-                                        <DataTable.Cell>{item.key}</DataTable.Cell>
-                                        <DataTable.Cell>{get_group(item.team)}</DataTable.Cell>
-                                        <DataTable.Cell>{item.team}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>}
-                                {item.cat===1 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title >요청 종류</DataTable.Title>
-                                        <DataTable.Title>이름</DataTable.Title>
-                                        <DataTable.Title>색상</DataTable.Title>
-                                        <DataTable.Title>카테고리</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell>{item.category}</DataTable.Cell>
-                                        <DataTable.Cell>{item.name}</DataTable.Cell>
-                                        <DataTable.Cell>{item.color}</DataTable.Cell>
-                                        <DataTable.Cell>{item.prodcat}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>}
-                                {item.cat===2 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title >요청 종류</DataTable.Title>
-                                        <DataTable.Title>색상</DataTable.Title>
-                                        <DataTable.Title>컬러코드</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell>{item.category}</DataTable.Cell>
-                                        <DataTable.Cell>{item.key}</DataTable.Cell>
-                                        <DataTable.Cell>{String(item.code)}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>}
-                                {item.cat===3 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title >요청 종류</DataTable.Title>
-                                        <DataTable.Title>이름</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell>{item.category}</DataTable.Cell>
-                                        <DataTable.Cell>{item.key}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>}
-                                {item.cat===4 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title >요청 종류</DataTable.Title>
-                                        <DataTable.Title>제품 이름</DataTable.Title>
-                                        <DataTable.Title>변경 전</DataTable.Title>
-                                        <DataTable.Title>변경 후</DataTable.Title>
-                                        <DataTable.Title>팀</DataTable.Title>
-                                        <DataTable.Title>요청 ID</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell>{item.category}</DataTable.Cell>
-                                        <DataTable.Cell>{item.name}</DataTable.Cell>
-                                        <DataTable.Cell>{String(item.before)}</DataTable.Cell>
-                                        <DataTable.Cell>{String(item.after)}</DataTable.Cell>
-                                        <DataTable.Cell>{item.team}</DataTable.Cell>
-                                        <DataTable.Cell>{item.id}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>}
-                                {item.cat===5 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title >요청 종류</DataTable.Title>
-                                        <DataTable.Title>제품 이름</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell>{item.category}</DataTable.Cell>
-                                        <DataTable.Cell>{item.name}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>}
-                                {item.cat===6 && <DataTable style={{backgroundColor:'silver', borderRadius: 10}}>
-                                    <DataTable.Header>
-                                        <DataTable.Title >요청 종류</DataTable.Title>
-                                        <DataTable.Title>유저 ID</DataTable.Title>
-                                    </DataTable.Header>
-                                    <DataTable.Row>
-                                        <DataTable.Cell>{item.category}</DataTable.Cell>
-                                        <DataTable.Cell>{item.key}</DataTable.Cell>
-                                    </DataTable.Row>
-                                </DataTable>}
+                                {item.cat===0 &&
+                                    <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                        <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#DBEBF0'}}>
+                                            <Row data={['요청 종류', '이름', 'ID', '부서', '팀']} widthArr={[wp('12%'),wp('20%'),wp('20%'),wp('17%'),wp('20%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                            <Row data={[item.category, item.name, item.key, get_group(item.team) , item.team]} widthArr={[wp('12%'),wp('20%'),wp('20%'),wp('17%'),wp('20%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        </Table>
+                                    </ScrollView>
+                                }
+                                {item.cat===1 &&
+                                    <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                        <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#D9DEF0'}}>
+                                            <Row data={['요청 종류', '제품 이름', '색상', '카테고리']} widthArr={[wp('12%'),wp('29%'),wp('29%'),wp('19%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                            <Row data={[item.category, item.name, item.color,item.prodcat]} widthArr={[wp('12%'),wp('29%'),wp('29%'),wp('19%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        </Table>
+                                    </ScrollView>
+                                }
+                                {item.cat===2 &&
+                                    <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                        <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#D9DEF0'}}>
+                                            <Row data={['요청 종류', '색상', '컬러코드']} widthArr={[wp('12%'),wp('39%'),wp('38%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                            <Row data={[item.category, item.key, String(item.code)]} widthArr={[wp('12%'),wp('39%'),wp('38%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        </Table>
+                                    </ScrollView>
+                                }
+                                {item.cat===3 &&
+                                    <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                        <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#D9DEF0'}}>
+                                            <Row data={['요청 종류', '이름']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                            <Row data={[item.category, item.key]} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        </Table>
+                                    </ScrollView>
+                                }
+                                {item.cat===4 &&
+                                    <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                        <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#DBEBF0'}}>
+                                            <Row data={['요청 종류', '제품 이름', '전', '후','팀', '요청 ID']} widthArr={[wp('12%'),wp('35%'),wp('5%'),wp('5%'),wp('17%'),wp('15%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                            <Row data={[item.category, item.name, String(item.before), String(item.after), item.team, item.id]} widthArr={[wp('12%'),wp('35%'),wp('5%'),wp('5%'),wp('17%'),wp('15%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        </Table>
+                                    </ScrollView>
+                                }
+                                {item.cat===5 &&
+                                    <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                        <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#FF687A'}}>
+                                            <Row data={['요청 종류', '제품 이름']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                            <Row data={[item.category, item.name]} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        </Table>
+                                    </ScrollView>
+                                }
+                                {item.cat===6 &&
+                                    <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
+                                           <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#FF687A'}}>
+                                               <Row data={['요청 종류', '유저 ID']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
+                                               <Row data={[item.category, item.key]} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                           </Table>
+                                    </ScrollView>
+                                }
                             </View>
                             <View style = {{alignSelf:'center'}}>
                                 {isSelectChecked && <CheckBox

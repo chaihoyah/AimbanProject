@@ -92,9 +92,8 @@ export default function SettingsMyinfoScreen({route, navigation}){
                     onPress={(x)=>{ask_deleteID()}}>
                     <Image
                         style={{position:'absolute', width: '100%', height: '100%',resizeMode:'contain'}}
-                        source={require('../../../../images/main/2box.png')}
+                        source={require('../../../../images/setting/deleteid_button.png')}
                         />
-                    <Text style={{alignSelf:'center',fontSize:RFPercentage(3), color:'red'}}>아이디 삭제</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -146,7 +145,6 @@ const styles = StyleSheet.create({
         width: '30%',
         height: '100%',
         justifyContent: 'center',
-        backgroundColor: 'red',
         borderRadius: 20,
     },
     textArea:{
