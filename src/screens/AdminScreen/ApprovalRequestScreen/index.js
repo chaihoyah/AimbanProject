@@ -333,16 +333,16 @@ export default function ApprovalRequestScreen ({route, navigation}){
         for(var i in updateJson){
             let update_code = updateJson[i].code;
             let nm;
-            if(updateJson.code[i].code<2000){
+            if(update_code<2000){
                 let nm_filtered = pro.filter((element) => element.code === update_code);
                 nm = nm_filtered[0].name.concat('-',nm_filtered[0].color);
             }
-            else if(updateJson.code[i].code<3000){
+            else if(update_code<3000){
                 let nm_filtered = fab.filter((element) => element.code === update_code);
                 nm = nm_filtered[0].name.concat('-',nm_filtered[0].color, "(원단)");
             }
-            else if(updateJson.code[i].code<4000){
-                let nm_filtered = fab.filter((element) => element.code === update_code);
+            else if(update_code<4000){
+                let nm_filtered = sub.filter((element) => element.code === update_code);
                 nm = nm_filtered[0].name.concat('-', "부자재");
             }
             all_arr.push({key:updateJson[i].idx, name:nm, before: updateJson[i].before, after: updateJson[i].after, id:updateJson[i].id, team:updateJson[i].team, category: "재고 조정", cat:4});
@@ -360,7 +360,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
                 nm = nm_filtered[0].name.concat('-',nm_filtered[0].color, "(원단)");
             }
             else if(deleteJson.code[i].code<4000){
-                let nm_filtered = fab.filter((element) => element.code === delete_code);
+                let nm_filtered = sub.filter((element) => element.code === delete_code);
                 nm = nm_filtered[0].name.concat('-', "부자재");
             }
             all_arr.push({key:delete_code, name:nm, category: "제품 삭제", cat:5});
