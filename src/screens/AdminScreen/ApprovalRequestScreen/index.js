@@ -35,6 +35,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
     const [userConfigdata, setuserConfigdata] = React.useState(route.params.configdata);
     const [allJson, setallJson] = React.useState();
     React.useEffect(() => {
+        console.log(signupJson);
         get_allarr();
     },[navigation,deleteJson]);
 
@@ -413,7 +414,7 @@ export default function ApprovalRequestScreen ({route, navigation}){
             <View style={{backgroundColor:'white', width:'100%', height: hp('65%'), borderRadius: 20, paddingTop:'4%'}}>
                 <View style={{width:'100%', flexDirection: 'row'}}>
                     <View style={{width:'60%', justifyContent:'center',alignItems:'flex-end'}}>
-                        <Text style={{fontSize:RFPercentage(3), marginBottom:'4%'}}>승인 목록</Text>
+                        <Text style={{fontSize:RFPercentage(3), marginBottom:'5%'}}>승인 목록</Text>
                     </View>
                     {isSelectChecked &&
                     <View style={{width:'38%', justifyContent:'center',alignItems:'flex-end'}}>
@@ -434,56 +435,56 @@ export default function ApprovalRequestScreen ({route, navigation}){
                                 {item.cat===0 &&
                                     <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                         <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#DBEBF0'}}>
-                                            <Row data={['요청 종류', '이름', 'ID', '부서', '팀']} widthArr={[wp('12%'),wp('20%'),wp('20%'),wp('17%'),wp('20%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                            <Row data={[item.category, item.name, item.key, get_group(item.team) , item.team]} widthArr={[wp('12%'),wp('20%'),wp('20%'),wp('17%'),wp('20%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                            <Row data={['요청 종류', '이름', 'ID', '부서', '팀']} widthArr={[wp('12%'),wp('20%'),wp('20%'),wp('17%'),wp('20%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                            <Row data={[item.category, item.name, item.key, get_group(item.team) , item.team]} widthArr={[wp('12%'),wp('20%'),wp('20%'),wp('17%'),wp('20%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                         </Table>
                                     </ScrollView>
                                 }
                                 {item.cat===1 &&
                                     <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                         <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#D9DEF0'}}>
-                                            <Row data={['요청 종류', '제품 이름', '색상', '카테고리']} widthArr={[wp('12%'),wp('29%'),wp('29%'),wp('19%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                            <Row data={[item.category, item.name, item.color,item.prodcat]} widthArr={[wp('12%'),wp('29%'),wp('29%'),wp('19%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                            <Row data={['요청 종류', '제품 이름', '색상', '카테고리']} widthArr={[wp('12%'),wp('29%'),wp('29%'),wp('19%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                            <Row data={[item.category, item.name, item.color,item.prodcat]} widthArr={[wp('12%'),wp('29%'),wp('29%'),wp('19%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                         </Table>
                                     </ScrollView>
                                 }
                                 {item.cat===2 &&
                                     <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                         <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#D9DEF0'}}>
-                                            <Row data={['요청 종류', '색상', '컬러코드']} widthArr={[wp('12%'),wp('39%'),wp('38%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                            <Row data={[item.category, item.key, String(item.code)]} widthArr={[wp('12%'),wp('39%'),wp('38%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                            <Row data={['요청 종류', '색상', '컬러코드']} widthArr={[wp('12%'),wp('39%'),wp('38%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                            <Row data={[item.category, item.key, String(item.code)]} widthArr={[wp('12%'),wp('39%'),wp('38%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                         </Table>
                                     </ScrollView>
                                 }
                                 {item.cat===3 &&
                                     <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                         <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#D9DEF0'}}>
-                                            <Row data={['요청 종류', '이름']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                            <Row data={[item.category, item.key]} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                            <Row data={['요청 종류', '이름']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                            <Row data={[item.category, item.key]} widthArr={[wp('12%'),wp('77%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                         </Table>
                                     </ScrollView>
                                 }
                                 {item.cat===4 &&
                                     <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                         <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#DBEBF0'}}>
-                                            <Row data={['요청 종류', '제품 이름', '전', '후','팀', '요청 ID']} widthArr={[wp('12%'),wp('35%'),wp('5%'),wp('5%'),wp('17%'),wp('15%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                            <Row data={[item.category, item.name, String(item.before), String(item.after), item.team, item.id]} widthArr={[wp('12%'),wp('35%'),wp('5%'),wp('5%'),wp('17%'),wp('15%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                            <Row data={['요청 종류', '제품 이름', '전', '후','팀', '요청 ID']} widthArr={[wp('12%'),wp('35%'),wp('5%'),wp('5%'),wp('17%'),wp('15%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                            <Row data={[item.category, item.name, String(item.before), String(item.after), item.team, item.id]} widthArr={[wp('12%'),wp('35%'),wp('5%'),wp('5%'),wp('17%'),wp('15%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                         </Table>
                                     </ScrollView>
                                 }
                                 {item.cat===5 &&
                                     <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                         <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#FF687A'}}>
-                                            <Row data={['요청 종류', '제품 이름']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                            <Row data={[item.category, item.name]} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                            <Row data={['요청 종류', '제품 이름']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                            <Row data={[item.category, item.name]} widthArr={[wp('12%'),wp('77%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                         </Table>
                                     </ScrollView>
                                 }
                                 {item.cat===6 &&
                                     <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                            <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#FF687A'}}>
-                                               <Row data={['요청 종류', '유저 ID']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                               <Row data={[item.category, item.key]} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                               <Row data={['요청 종류', '유저 ID']} widthArr={[wp('12%'),wp('77%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                               <Row data={[item.category, item.key]} widthArr={[wp('12%'),wp('77%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                            </Table>
                                     </ScrollView>
                                 }

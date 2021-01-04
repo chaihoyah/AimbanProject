@@ -13,11 +13,13 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import AsyncStorage from "@react-native-community/async-storage";
 import config_data from "../../../../config.json";
+import {JSHash, JSHmac, CONSTANTS} from "react-native-hash";
 
 export default function MakeIDScreen ({route, navigation}){
 
     const [userID, setuserID] = React.useState("");
     const [userPassword, setuserPassword] = React.useState("");
+    const [hashedPassword, sethashedPassword] = React.useState("");
     const [userName, setuserName] = React.useState("");
     //Group0:
     const [userGroup, setuserGroup] = React.useState(0);
@@ -63,20 +65,26 @@ export default function MakeIDScreen ({route, navigation}){
                   text: "Cancel",
                   style: "cancel"
                 },
-                { text: "OK", onPress: () => {finish_makeid()} }
+                { text: "OK", onPress: () => {hash_pwd()} }
               ],
               { cancelable: false }
             );
         }
     };
 
-    function finish_makeid()
+    function hash_pwd(){
+        JSHash(userPassword, CONSTANTS.HashAlgorithms.sha256)
+            .then(hash => finish_makeid(hash))
+            .catch(err => console.log(err))
+    };
+
+    function finish_makeid(hash)
     {
         //서버에 보내기
         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.user_signup),
         {method:'POST',
         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-        body: JSON.stringify({id:userID, passwd: userPassword,team:get_teamtext(), name:userName})})
+        body: JSON.stringify({id:userID, passwd: hash,team:"개발팀", name:userName})})
         .then((response)=> {return response.json();})
         .then((json)=> {if(json.Code == "0") navigation.goBack(); else console.log(json);})
         .catch((error)=>{console.error(error); signupError();});

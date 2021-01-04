@@ -29,7 +29,6 @@ export default function InoutHistoryScreen ({route, navigation}){
         var fab = userConfigdata.fab;
         var pro = userConfigdata.pro;
         var sub = userConfigdata.sub;
-        console.log(inout_obj);
         for(let i=0;i<inout_obj.length;i++){
             let date = inout_obj[i].time.slice(0,10);
             let nm = Number((' '+inout_obj[i].value).slice(1).slice(8,12));
@@ -84,7 +83,7 @@ export default function InoutHistoryScreen ({route, navigation}){
                 <Text style={{fontSize:RFPercentage(2.4)}}>In/out history</Text>
             </View>
             <View style={{backgroundColor:'white', width:'100%', height: hp('65%'), borderRadius: 20, paddingTop:'4%',alignItems:'center'}}>
-                <Text style={{fontSize:RFPercentage(3), marginBottom:'4%'}}>입/출고</Text>
+                <Text style={{fontSize:RFPercentage(3), marginBottom:'5%'}}>입/출고</Text>
                 <View style = {styles.scroll}>
                     <FlatList
                         data = {inout_arr}
@@ -93,16 +92,16 @@ export default function InoutHistoryScreen ({route, navigation}){
                             {item.typenum !== 3 &&
                                 <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                     <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={[(item.typenum === 1) ? {backgroundColor:'#DBEBF0'}: {backgroundColor:'#D9DEF0'}]}>
-                                        <Row data={['요청 종류', '수량', '제품 이름', '이름', '팀', '날짜']} widthArr={[wp('12%'),wp('5%'),wp('26%'),wp('12%'),wp('16%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                        <Row data={[item.type, String(item.amount), String(item.name), item.user, item.team, item.time]} widthArr={[wp('12%'),wp('5%'),wp('26%'),wp('12%'),wp('16%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        <Row data={['요청 종류', '수량', '제품 이름', '이름', '팀', '날짜']} widthArr={[wp('12%'),wp('5%'),wp('26%'),wp('12%'),wp('16%'),wp('18%')]} style={{height:60}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                        <Row data={[item.type, String(item.amount), String(item.name), item.user, item.team, item.time]} widthArr={[wp('12%'),wp('5%'),wp('26%'),wp('12%'),wp('16%'),wp('18%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                     </Table>
                                 </ScrollView>
                                 }
                             {item.typenum === 3 &&
                                 <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                     <Table borderStyle = {{borderRadius: 20, borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#EBD9F0'}}>
-                                        <Row data={['요청 종류', '전', '후','제품 이름',  '팀', '날짜']} widthArr={[wp('12%'),wp('5%'),wp('5%'),wp('36%'),wp('13%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                        <Row data={[item.type, String(item.bef), String(item.aft),String(item.name),item.team, item.time]} widthArr={[wp('12%'),wp('5%'),wp('5%'),wp('36%'),wp('13%'),wp('18%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                        <Row data={['요청 종류', '전', '후','제품 이름',  '팀', '날짜']} widthArr={[wp('12%'),wp('5%'),wp('5%'),wp('36%'),wp('13%'),wp('18%')]} style={{height:60}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                        <Row data={[item.type, String(item.bef), String(item.aft),String(item.name),item.team, item.time]} widthArr={[wp('12%'),wp('5%'),wp('5%'),wp('36%'),wp('13%'),wp('18%')]} style={{height:80}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                     </Table>
                                 </ScrollView>
                                 }

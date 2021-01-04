@@ -80,7 +80,7 @@ export default function MainScreen ({route, navigation}){
                     />
                     <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                         <Text style={{height:'40%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end' }}>{userName}</Text>
-                        <Text style={{height:'40%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{userTeam}</Text>
+                        <Text style={{height:'40%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{userTeam}</Text>
                     </View>
                 </View>
             </View>

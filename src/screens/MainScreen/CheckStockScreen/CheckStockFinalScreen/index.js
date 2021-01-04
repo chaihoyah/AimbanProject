@@ -221,8 +221,8 @@ export default function CheckStockFinalScreen({route, navigation}){
                         renderItem={({item,index}) =>
                             <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                 <Table borderStyle = {{borderWidth: 0.7, borderColor: 'black'}} style ={{backgroundColor:'#DBEBF0', alignSelf:'center'}}>
-                                    <Row data={['제품 이름', '색상','재고']} widthArr={[wp('50%'),wp('23%'),wp('22%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                    <Row data={[item.name, item.color, stockArray[index]]} widthArr={[wp('50%'),wp('23%'),wp('22%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                    <Row data={['제품 이름', '색상','재고']} widthArr={[wp('50%'),wp('23%'),wp('22%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                    <Row data={[item.name, item.color, stockArray[index]]} widthArr={[wp('50%'),wp('23%'),wp('22%')]} style={{height:70}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                 </Table>
                             </ScrollView>
                         }

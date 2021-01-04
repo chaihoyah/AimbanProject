@@ -12,7 +12,9 @@ import {
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
+import moment from 'moment';
 import config_data from "../../../config.json";
+import {JSHash, JSHmac, CONSTANTS} from "react-native-hash";
 
 export default function AdminScreen ({navigation, route}){
     const [adminID, setadminID] = React.useState('');
@@ -27,9 +29,11 @@ export default function AdminScreen ({navigation, route}){
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', ()=>{
+            let date = moment().utcOffset('+09:00').format('YYYY-MM-DD');
             fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_timeline),
             {method:'POST',
-            headers: {Accept: 'application/json', 'Content-Type': 'application/json'}})
+            headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
+            body: JSON.stringify({today:date})})
             .then((response)=> {return response.json();})
             .then((json)=> {if(json.Code == "0") setInout_obj(json.Data); else fetchError(json);})
             .catch((error)=>{console.error(error);});
@@ -78,11 +82,17 @@ export default function AdminScreen ({navigation, route}){
         });
     },[navigation]);
 
-    function doLogin(){
+    function hash_pwd(){
+        JSHash(adminpassword, CONSTANTS.HashAlgorithms.sha256)
+            .then(hash => doLogin(hash))
+            .catch(err => console.log(err))
+    };
+
+    function doLogin(hash){
         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.admin_login),
         {method:'POST',
         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-        body: JSON.stringify({id:adminID, passwd:adminpassword})})
+        body: JSON.stringify({id:adminID, passwd:hash})})
         .then((response)=> {return response.json();})
         .then((json)=> {if(json.Code == "0") loggedin(json); else loginError();})
         .catch((error)=>{console.error(error);});
@@ -140,7 +150,7 @@ export default function AdminScreen ({navigation, route}){
                  <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={(x) => {doLogin()}}>
+                    onPress={(x) => {hash_pwd()}}>
                     <Image
                         style={{width:'100%',height:'100%',resizeMode:'contain'}}
                         source={require('../../images/login/login_button.png')}

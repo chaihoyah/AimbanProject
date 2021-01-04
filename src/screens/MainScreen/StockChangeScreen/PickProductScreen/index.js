@@ -665,7 +665,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -765,7 +765,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -826,7 +826,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -900,7 +900,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -1010,7 +1010,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -1056,7 +1056,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -1102,7 +1102,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -1161,7 +1161,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>
@@ -1262,7 +1262,7 @@ export default function PickProductScreen ({route, navigation}){
                         />
                         <View style={{flexDirection:'column', alignItems:'flex-end'}}>
                             <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('2'),alignSelf:'flex-end'}}>{route.params.username}</Text>
-                            <Text style={{height:'30%',width:'87%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
+                            <Text style={{height:'30%',width:'100%', color:'black',fontSize:RFPercentage('1.6'),alignSelf:'flex-end'}}>{route.params.userteam}</Text>
                         </View>
                     </View>
                 </View>

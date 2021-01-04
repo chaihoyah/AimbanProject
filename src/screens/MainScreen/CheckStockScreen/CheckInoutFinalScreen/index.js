@@ -348,8 +348,8 @@ export default function CheckInoutFinalScreen({route, navigation}){
                         renderItem={({item}) =>
                             <ScrollView style={{marginTop: '2%', width: '100%', alignSelf:'center'}} horizontal={true}>
                                 <Table borderStyle = {{borderWidth: 0.7, borderColor: 'black'}} style ={[(item.amount > 0) ? {backgroundColor:'#DBEBF0',marginBottom:'3%'}: {backgroundColor:'#D9DEF0',marginBottom:'3%'}]}>
-                                    <Row data={['종류', '이름','제품 이름',  '수량', '날짜']} widthArr={[wp('7%'),wp('13%'),wp('50%'),wp('8%'),wp('17%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(2)}}/>
-                                    <Row data={[item.type, item.user, item.name,String(item.amount), item.time]} widthArr={[wp('7%'),wp('13%'),wp('50%'),wp('8%'),wp('17%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.8)}}/>
+                                    <Row data={['종류', '이름','제품 이름',  '수량', '날짜']} widthArr={[wp('7%'),wp('13%'),wp('50%'),wp('8%'),wp('17%')]} style={{height:50}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.7)}}/>
+                                    <Row data={[item.type, item.user, item.name,String(item.amount), item.time]} widthArr={[wp('7%'),wp('13%'),wp('50%'),wp('8%'),wp('17%')]} style={{height:70}} textStyle={{textAlign: 'center', fontWeight: '100', fontSize:RFPercentage(1.5)}}/>
                                 </Table>
                             </ScrollView>
                         }

@@ -13,6 +13,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
 import AsyncStorage from "@react-native-community/async-storage";
 import config_data from "../../../config.json";
+import {JSHash, JSHmac, CONSTANTS} from "react-native-hash";
 
 
 export default function LoginScreen ({navigation}){
@@ -25,29 +26,35 @@ export default function LoginScreen ({navigation}){
     const [userTeam, setuserTeam] = React.useState("");
 
     React.useEffect(()=>{
-        AsyncStorage.getItem('user_loginauto', (err, result)=>{
+        /*AsyncStorage.getItem('user_loginauto', (err, result)=>{
         if(JSON.parse(result) == true) loggedin();
-        });
+        });*/
     },[]);
 
-    function doLogin(){
+    function hash_pwd(){
+        JSHash(text_pwd, CONSTANTS.HashAlgorithms.sha256)
+            .then(hash => doLogin(hash))
+            .catch(err => console.log(err))
+    };
+
+    function doLogin(hash){
     //Body에 PWD 넣기
         fetch(config_data.server.host.concat(":",config_data.server.port,config_data.server.user_login),
         {method:'POST',
         headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-        body: JSON.stringify({id:text_id, passwd:text_pwd})})
+        body: JSON.stringify({id:text_id, passwd:hash})})
         .then((response)=> {return response.json();})
-        .then((json)=> {if(json.Code == "0") loggedin(json); else loginError();})
+        .then((json)=> {if(json.Code == "0") loggedin(json, hash); else loginError();})
         .catch((error)=>{console.error(error);});
 
     };
 
-    function loggedin(json){
+    function loggedin(json, hash){
     //AutoLogin 넣기, name, team 서버 요청 받아서 넣기
         //
         AsyncStorage.setItem('user_loginauto', JSON.stringify(false), ()=>{});
         AsyncStorage.setItem('user_id', text_id, ()=>{});
-        AsyncStorage.setItem('user_pwd', text_pwd, ()=>{});
+        AsyncStorage.setItem('user_pwd', hash, ()=>{});
         AsyncStorage.setItem('user_name', json.Data.name, ()=>{});
         AsyncStorage.setItem('user_team', json.Data.team, ()=>{});
         navigation.replace('MainStack', {username:json.Data.name, userteam:json.Data.team, userid:text_id});
@@ -111,7 +118,7 @@ export default function LoginScreen ({navigation}){
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.button}
-                    onPress={() => {doLogin()}}>
+                    onPress={() => {hash_pwd()}}>
                     <Image
                         style={{width:'100%',height:'100%',resizeMode:'contain'}}
                         source={require('../../images/login/login_button.png')}
